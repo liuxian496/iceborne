@@ -5,12 +5,10 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest]
 
     steps:
       - name: Check out Git repository
@@ -20,18 +18,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: npm
 
-      - name: Install dependencies
-        run: yarn
-
-      - name: yarn install
+      - name: npm install
         run: |
-          yarn install
+          npm install
 
       - name: npm test
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm run package
+          npm run lint
           npm exec tsc
           npm test
