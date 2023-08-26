@@ -25,12 +25,15 @@ const configuration: webpack.Configuration = {
 
   target: ['web', 'electron-renderer'],
 
-  entry: [path.join(webpackPaths.srcRendererPath, 'index.tsx')],
+  entry: {
+    app: path.join(webpackPaths.srcRendererPath, 'index.tsx'),
+    barrage: path.join(webpackPaths.srcRendererPath, 'barrage.tsx'),
+  },
 
   output: {
     path: webpackPaths.distRendererPath,
     publicPath: './',
-    filename: 'renderer.js',
+    filename: '[name].renderer.js',
     library: {
       type: 'umd',
     },
@@ -112,7 +115,7 @@ const configuration: webpack.Configuration = {
     }),
 
     new MiniCssExtractPlugin({
-      filename: 'style.css',
+      filename: '[name].style.css',
     }),
 
     new BundleAnalyzerPlugin({
@@ -121,6 +124,7 @@ const configuration: webpack.Configuration = {
     }),
 
     new HtmlWebpackPlugin({
+      chunks: ['app'],
       filename: 'index.html',
       template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
       minify: {
@@ -134,6 +138,18 @@ const configuration: webpack.Configuration = {
 
     new webpack.DefinePlugin({
       'process.type': '"renderer"',
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ['barrage'],
+      filename: 'barrage.html',
+      template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
+      minify: {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true,
+      },
+      isBrowser: false,
+      isDevelopment: false,
     }),
   ],
 };

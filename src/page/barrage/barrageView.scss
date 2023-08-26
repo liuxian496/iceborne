@@ -1,0 +1,26 @@
+$component-cls: 'barrage';
+
+.#{$component-cls} {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  color: #FFFFFF;
+  left: 0;
+  top: 0;
+  padding-left: 10px;
+  padding-top: 10px;
+  -webkit-app-region: drag;
+  z-index: 1;
+
+  &__overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+    background-color: #000000;
+    opacity: 0.75;
+    z-index: 0;
+  }
+}

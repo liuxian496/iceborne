@@ -25,12 +25,12 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
-  },
-  showDanmuView: (args: string) => {
-    ipcRenderer.send('show-danmu-view', args);
-  },
-  hideDanmuView: () => ipcRenderer.send('hide-danmu-view'),
+  }
 };
+
+setInterval(() => {
+  console.log(document.getElementsByTagName('ul'));
+}, 500);
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
 

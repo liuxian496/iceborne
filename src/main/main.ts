@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { hidenDanMuView, showDanMuView } from './barrageWin';
+import { DanMuProps } from './preload';
 
 class AppUpdater {
   constructor() {
@@ -29,6 +31,14 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+ipcMain.on('show-danmu-view', async (event, args: DanMuProps) => {
+  await showDanMuView(parseInt(args.roomId, 10));
+});
+
+ipcMain.on('hide-danmu-view', async () => {
+  await hidenDanMuView();
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -74,6 +84,7 @@ const createWindow = async () => {
     width: 1024,
     height: 728,
     icon: getAssetPath('icon.png'),
+    alwaysOnTop: true,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
@@ -84,6 +95,7 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
+    console.log('ready-to-show');
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
