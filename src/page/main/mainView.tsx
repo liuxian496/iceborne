@@ -3,6 +3,7 @@ import './mainView.scss';
 
 import {
   Button,
+  Switch,
   Form,
   FormControl,
   FormLabel,
@@ -11,12 +12,19 @@ import {
   useForm,
 } from 'litten';
 
+import { BarrageSetting } from 'page/page.types';
+
+const startSpeaking = '开始朗读';
+const stopSpeaking = '停止朗读';
+
 export default function MainView() {
-  const mainForm = useForm();
+  const mainForm = useForm<BarrageSetting>();
 
   const [loading, setLoading] = useState(true);
 
   const [connect, setConnect] = useState(false);
+
+  const [speechLabel, setSpeechLabel] = useState(startSpeaking);
 
   const handleRoomIdTextFieldChange = (e: any) => {
     const { value } = e;
@@ -30,13 +38,23 @@ export default function MainView() {
   useEffect(() => {}, [loading]);
 
   const handleConnectBtuClick = () => {
-    window.electron?.showDanmuView(mainForm.getValueByPath('roomId'));
+    const values = mainForm.getValues();
+    window.electron?.showDanmuView(values);
     setConnect(true);
   };
 
   const handleDisconnectBtuClick = () => {
     window.electron?.hideDanmuView();
     setConnect(false);
+  };
+
+  const handleSpeechChange = (e: any) => {
+    if (e.checked === true) {
+      setSpeechLabel(startSpeaking);
+    } else {
+      setSpeechLabel(stopSpeaking);
+    }
+    window.electron?.changeSpeech(e.checked);
   };
 
   return (
@@ -46,7 +64,17 @@ export default function MainView() {
           <FormControl valuePath="roomId">
             <TextField
               style={{ marginLeft: '10px' }}
+              defaultValue={8638358}
               onChange={handleRoomIdTextFieldChange}
+            />
+          </FormControl>
+        </FormLabel>
+        <FormLabel label={speechLabel}>
+          <FormControl valuePath="speech">
+            <Switch
+              style={{ marginLeft: '10px' }}
+              defaultChecked
+              onChange={handleSpeechChange}
             />
           </FormControl>
         </FormLabel>

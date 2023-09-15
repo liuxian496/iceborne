@@ -12,10 +12,15 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { BarrageSetting } from 'page/page.types';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { hidenDanMuView, showDanMuView } from './barrageWin';
-import { DanMuProps } from './preload';
+
+import {
+  hidenDanMuView,
+  showDanMuView,
+  changeBarrageSpeech,
+} from './barrageWin';
 
 class AppUpdater {
   constructor() {
@@ -33,12 +38,27 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('show-danmu-view', async (event, args: DanMuProps) => {
-  await showDanMuView(parseInt(args.roomId, 10));
+/**
+ * 接收打开弹幕窗口的消息
+ */
+ipcMain.on('show-danmu-view', async (event, args: BarrageSetting) => {
+  console.log(args);
+  console.log(`roomID: ${args.roomId}`);
+  await showDanMuView(args);
 });
 
+/**
+ * 接收关闭弹幕窗口的消息
+ */
 ipcMain.on('hide-danmu-view', async () => {
   await hidenDanMuView();
+});
+
+/**
+ * 接收更改语音朗读功能是否开启的消息
+ */
+ipcMain.on('change-speech', async (event, args: boolean) => {
+  await changeBarrageSpeech(args);
 });
 
 if (process.env.NODE_ENV === 'production') {
