@@ -1,0 +1,11 @@
+$component-cls: 'main';
+
+.#{$component-cls} {
+
+  &__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    height: 100px;
+  }
+}
