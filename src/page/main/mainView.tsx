@@ -10,6 +10,7 @@ import {
   Mode,
   TextField,
   useForm,
+  StackPanel,
 } from 'litten';
 
 import { BarrageSetting } from 'page/page.types';
@@ -60,24 +61,26 @@ export default function MainView() {
   return (
     <>
       <Form formRef={mainForm}>
-        <FormLabel label="房间号:">
-          <FormControl valuePath="roomId">
-            <TextField
-              style={{ marginLeft: '10px' }}
-              defaultValue={8638358}
-              onChange={handleRoomIdTextFieldChange}
-            />
-          </FormControl>
-        </FormLabel>
-        <FormLabel label={speechLabel}>
-          <FormControl valuePath="speech">
-            <Switch
-              style={{ marginLeft: '10px' }}
-              defaultChecked
-              onChange={handleSpeechChange}
-            />
-          </FormControl>
-        </FormLabel>
+        <StackPanel direction="column" alignItems="flex-start">
+          <FormLabel label="房间号:">
+            <FormControl valuePath="roomId">
+              <TextField
+                style={{ marginLeft: '10px' }}
+                placeholder="请输入房间号"
+                onChange={handleRoomIdTextFieldChange}
+              />
+            </FormControl>
+          </FormLabel>
+          <FormLabel label={speechLabel}>
+            <FormControl valuePath="speech">
+              <Switch
+                style={{ marginLeft: '10px' }}
+                defaultChecked
+                onChange={handleSpeechChange}
+              />
+            </FormControl>
+          </FormLabel>
+        </StackPanel>
       </Form>
       <div className="main__bottom">
         {connect === false && (
