@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/liuxian496/iceborne/compare/v0.1.1...v0.1.2) (2023-09-27)
+
+
+### Bug Fixes
+
+* 修改主窗体一直置顶的问题 ([c6b81dc](https://github.com/liuxian496/iceborne/commit/c6b81dcdc9ec54264ee412ff5682a10e27140763))
+
+
+
 ## [0.1.1](https://github.com/liuxian496/iceborne/compare/v0.1.0...v0.1.1) (2023-09-15)
 
 
