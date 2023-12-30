@@ -14,3 +14,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.litten-formLabel__label {
+  width: 200px;
+}
