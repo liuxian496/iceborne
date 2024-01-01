@@ -7,6 +7,7 @@ const zhCN = {
   roomId_placeholder: '请输入房间号',
   connect: '连接',
   disconnect: '断开连接',
+  author:'作者：弗特马克贝因'
 };
 
 export default zhCN;

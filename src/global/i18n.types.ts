@@ -7,4 +7,5 @@ export interface Lexicon {
   roomId_placeholder: string;
   connect: string;
   disconnect: string;
+  author: string;
 }

@@ -163,6 +163,7 @@ export default function MainView() {
           </Button>
         )}
       </div>
+      <div className="copyright">{i18N.author}</div>
     </>
   );
 }
