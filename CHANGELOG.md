@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/liuxian496/iceborne/compare/v0.1.3...v0.1.4) (2024-01-01)
+
+
+### Features
+
+* 添加author信息展示 ([bc8fbe1](https://github.com/liuxian496/iceborne/commit/bc8fbe19944c04e05cbeb114d96f4d05f0a9052a))
+
+
+
 ## [0.1.3](https://github.com/liuxian496/iceborne/compare/v0.1.2...v0.1.3) (2023-12-30)
 
 
