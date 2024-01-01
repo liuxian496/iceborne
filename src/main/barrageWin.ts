@@ -7,7 +7,7 @@ import { BarrageSetting } from 'page/page.types';
 let barrageWin: BrowserWindow | null = null;
 
 function createDanMuViewByRoomId(props: BarrageSetting) {
-  const { roomId, speech } = props;
+  const { roomId, speech, volume } = props;
 
   barrageWin = new BrowserWindow({
     show: false,
@@ -59,12 +59,18 @@ function createDanMuViewByRoomId(props: BarrageSetting) {
     supperChat.style["padding-left"]="10px";
 
     // 根据默认值控制语音播报功能的开启
-    window.electron.broadcast(${speech})
+    window.electron.broadcast(${speech});
+    window.electron.updateVolume(${volume});
 
     window.electron.onUpdateVoice((event, speech) => {
       // 根据默认值控制语音播报功能的开启
-      window.electron.broadcast(speech)
-    })
+      window.electron.broadcast(speech);
+    });
+
+    window.electron.onUpdateVolume((event, volume) => {
+      // 根据默认值控制语音播报功能的开启
+      window.electron.updateVolume(volume);
+    });
 
     `
   );
@@ -104,4 +110,8 @@ export function hidenDanMuView() {
  */
 export function changeBarrageSpeech(startSpeaking: boolean) {
   barrageWin?.webContents.send('update-speech', startSpeaking);
+}
+
+export function changeDanMuVolume(volume: number) {
+  barrageWin?.webContents.send('update-volume', volume);
 }

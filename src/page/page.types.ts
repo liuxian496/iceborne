@@ -7,4 +7,8 @@ export interface BarrageSetting {
    * 是否启用语音播放
    */
   speech: boolean;
+  /**
+   * 播报音量
+   */
+  volume: number;
 }

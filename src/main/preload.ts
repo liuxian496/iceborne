@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
@@ -8,6 +9,8 @@ export type Channels = 'ipc-example';
 let collectDanmuTimer: any;
 
 let currentVoiceChecked = false;
+
+let currentVolume = 35;
 
 let bilibiliDanmuElement: Element | undefined;
 
@@ -31,7 +34,8 @@ function startDanmuCirculate() {
             const utterThis = new SpeechSynthesisUtterance(
               `${userName.innerText}说${msg.innerText}`
             );
-            utterThis.volume = 0.35;
+            console.log('currentVolume: ' + currentVolume);
+            utterThis.volume = currentVolume / 100;
             speechSynthesis.speak(utterThis);
 
             utterThis.onend = () => {
@@ -64,6 +68,10 @@ function checkBroadcast(voiceChecked: boolean) {
     bilibiliDanmuElement = undefined;
     currentBroadcastIndex = 0;
   }
+}
+
+function updateVolume(value: number) {
+  currentVolume = value;
 }
 
 const electronHandler = {
@@ -105,11 +113,21 @@ const electronHandler = {
     ipcRenderer.send('change-speech', speech);
   },
   /**
+   * 发送更改语音朗读功能是否开启的消息
+   * @param speech 是否开启朗读 true表示开启，反之表示不开启
+   */
+  changeVolume: (volume: number) => {
+    ipcRenderer.send('change-volume', volume);
+  },
+  /**
    * 监听update-speech消息，并在其触发时，调用callback
    * @param callback 回调函数
    */
   onUpdateVoice: (callback: any) => {
     ipcRenderer.on('update-speech', callback);
+  },
+  onUpdateVolume: (callback: any) => {
+    ipcRenderer.on('update-volume', callback);
   },
   /**
    * 是否开启语音播报功能
@@ -117,6 +135,13 @@ const electronHandler = {
    */
   broadcast: (speech: boolean) => {
     checkBroadcast(speech);
+  },
+  /**
+   * 更新音量
+   * @param value 待更新的值
+   */
+  updateVolume: (value: number) => {
+    updateVolume(value);
   },
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 /**
@@ -19,6 +20,7 @@ import { resolveHtmlPath } from './util';
 import {
   hidenDanMuView,
   showDanMuView,
+  changeDanMuVolume,
   changeBarrageSpeech,
 } from './barrageWin';
 
@@ -43,7 +45,6 @@ ipcMain.on('ipc-example', async (event, arg) => {
  */
 ipcMain.on('show-danmu-view', async (event, args: BarrageSetting) => {
   console.log(args);
-  console.log(`roomID: ${args.roomId}`);
   await showDanMuView(args);
 });
 
@@ -59,6 +60,13 @@ ipcMain.on('hide-danmu-view', async () => {
  */
 ipcMain.on('change-speech', async (event, args: boolean) => {
   await changeBarrageSpeech(args);
+});
+
+/**
+ * 接收更改音量的消息
+ */
+ipcMain.on('change-volume', async (event, args: number) => {
+  await changeDanMuVolume(args);
 });
 
 if (process.env.NODE_ENV === 'production') {
