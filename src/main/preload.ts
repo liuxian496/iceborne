@@ -3,76 +3,9 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { BarrageSetting } from 'page/page.types';
+import { updateSpeech, updateVolume } from './speaking';
 
 export type Channels = 'ipc-example';
-
-let collectDanmuTimer: any;
-
-let currentVoiceChecked = false;
-
-let currentVolume = 35;
-
-let bilibiliDanmuElement: Element | undefined;
-
-let currentBroadcastIndex = 0;
-
-function startDanmuCirculate() {
-  collectDanmuTimer = setTimeout(() => {
-    clearTimeout(collectDanmuTimer);
-    if (currentVoiceChecked === true) {
-      if (
-        bilibiliDanmuElement !== undefined &&
-        bilibiliDanmuElement.children.length > currentBroadcastIndex
-      ) {
-        const current = bilibiliDanmuElement.children[currentBroadcastIndex];
-        // 如果有弹幕，收集，计数加1
-        if (current) {
-          const userName: any = current.firstChild;
-          const msg: any = current.lastChild;
-
-          if (userName !== undefined && msg !== undefined) {
-            const utterThis = new SpeechSynthesisUtterance(
-              `${userName.innerText}说${msg.innerText}`
-            );
-            console.log('currentVolume: ' + currentVolume);
-            utterThis.volume = currentVolume / 100;
-            speechSynthesis.speak(utterThis);
-
-            utterThis.onend = () => {
-              startDanmuCirculate();
-              currentBroadcastIndex += 1;
-            };
-          } else {
-            startDanmuCirculate();
-          }
-        } else {
-          startDanmuCirculate();
-        }
-      } else {
-        startDanmuCirculate();
-      }
-    }
-  }, 100);
-}
-
-function checkBroadcast(voiceChecked: boolean) {
-  if (bilibiliDanmuElement === undefined) {
-    [bilibiliDanmuElement] = document.getElementsByClassName('danmaku');
-    currentBroadcastIndex = bilibiliDanmuElement.children.length;
-  }
-  currentVoiceChecked = voiceChecked;
-  if (voiceChecked === true) {
-    startDanmuCirculate();
-  } else {
-    // 关闭播报时的清理
-    bilibiliDanmuElement = undefined;
-    currentBroadcastIndex = 0;
-  }
-}
-
-function updateVolume(value: number) {
-  currentVolume = value;
-}
 
 const electronHandler = {
   ipcRenderer: {
@@ -93,55 +26,40 @@ const electronHandler = {
     },
   },
   /**
-   * 发送打开弹幕窗口的消息
-   * @param args 控制弹幕的参数
+   * 发送打开弹幕窗口消息
+   * @param args 弹幕控制参数
    */
-  showDanmuView: (args: BarrageSetting) => {
+  sentShowDanmuView: (args: BarrageSetting) => {
     ipcRenderer.send('show-danmu-view', args);
   },
   /**
-   * 发送关闭弹幕窗口的消息
+   * 发送关闭弹幕窗口消息
    */
-  hideDanmuView: () => {
+  sentHideDanmuView: () => {
     ipcRenderer.send('hide-danmu-view');
   },
   /**
-   * 发送更改语音朗读功能是否开启的消息
-   * @param speech 是否开启朗读 true表示开启，反之表示不开启
+   * 发送更改语音播报功能的消息
+   * @param args 弹幕控制参数
    */
-  changeSpeech: (speech: boolean) => {
-    ipcRenderer.send('change-speech', speech);
+  sentChangeSpeaking: (args: BarrageSetting) => {
+    ipcRenderer.send('change-speaking', args);
   },
   /**
-   * 发送更改语音朗读功能是否开启的消息
-   * @param speech 是否开启朗读 true表示开启，反之表示不开启
-   */
-  changeVolume: (volume: number) => {
-    ipcRenderer.send('change-volume', volume);
-  },
-  /**
-   * 监听update-speech消息，并在其触发时，调用callback
+   * 自定义事件onBarrageSpeakingChange：监听barrage-speaking-change消息，并触发回调
    * @param callback 回调函数
    */
-  onUpdateVoice: (callback: any) => {
-    ipcRenderer.on('update-speech', callback);
-  },
-  onUpdateVolume: (callback: any) => {
-    ipcRenderer.on('update-volume', callback);
+  onBarrageSpeakingChange: (callback: any) => {
+    ipcRenderer.on('barrage-speaking-change', callback);
   },
   /**
-   * 是否开启语音播报功能
-   * @param speech 是否开启朗读 true表示开启，反之表示不开启
+   * 更新弹幕控制参数
+   * @param args 待更新的弹幕控制参数
    */
-  broadcast: (speech: boolean) => {
-    checkBroadcast(speech);
-  },
-  /**
-   * 更新音量
-   * @param value 待更新的值
-   */
-  updateVolume: (value: number) => {
-    updateVolume(value);
+  updateBarrageSetting: (args: BarrageSetting) => {
+    const { speech, volume } = args;
+    updateSpeech(speech);
+    updateVolume(volume);
   },
 };
 

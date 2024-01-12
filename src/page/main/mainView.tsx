@@ -56,13 +56,12 @@ export default function MainView() {
   };
 
   const handleConnectBtuClick = () => {
-    const values = mainForm.getValues();
-    window.electron?.showDanmuView(values);
+    window.electron?.sentShowDanmuView(mainForm.getValues());
     setConnect(true);
   };
 
   const handleDisconnectBtuClick = () => {
-    window.electron?.hideDanmuView();
+    window.electron?.sentHideDanmuView();
     setConnect(false);
   };
 
@@ -71,14 +70,20 @@ export default function MainView() {
 
     if (checked != null) {
       setSpeech(checked);
-      window.electron?.changeSpeech(checked);
+      window.electron?.sentChangeSpeaking({
+        ...mainForm.getValues(),
+        speech: checked,
+      });
     }
   };
 
   const handleVolumeChange = (e: LittenNumberChangeEvent) => {
     const { value } = e;
     if (value !== undefined) {
-      window.electron?.changeVolume(value);
+      window.electron?.sentChangeSpeaking({
+        ...mainForm.getValues(),
+        volume: value,
+      });
     }
   };
 
@@ -98,7 +103,7 @@ export default function MainView() {
             <FormControl valuePath="roomId">
               <TextField
                 style={{ marginLeft: '10px' }}
-                defaultValue={8638358}
+                // defaultValue={8638358}
                 placeholder={i18N.roomId_placeholder}
                 onChange={handleRoomIdTextFieldChange}
               />

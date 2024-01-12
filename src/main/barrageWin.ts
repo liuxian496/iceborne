@@ -58,18 +58,17 @@ function createDanMuViewByRoomId(props: BarrageSetting) {
     supperChat.style["align-items"]="center";
     supperChat.style["padding-left"]="10px";
 
-    // 根据默认值控制语音播报功能的开启
-    window.electron.broadcast(${speech});
-    window.electron.updateVolume(${volume});
-
-    window.electron.onUpdateVoice((event, speech) => {
-      // 根据默认值控制语音播报功能的开启
-      window.electron.broadcast(speech);
+    // 打开弹幕窗口时，更新弹幕控制参数
+    window.electron.updateBarrageSetting({
+      speech:${speech},
+      volume:${volume}
     });
 
-    window.electron.onUpdateVolume((event, volume) => {
-      // 根据默认值控制语音播报功能的开启
-      window.electron.updateVolume(volume);
+    // 注册onBarrageSpeakingChange事件的回调
+    window.electron.onBarrageSpeakingChange((event, args) => {
+      console.log('onBarrageSpeakingChange')
+      // 更新弹幕控制参数
+      window.electron.updateBarrageSetting(args);
     });
 
     `
@@ -90,7 +89,7 @@ function createDanMuViewByRoomId(props: BarrageSetting) {
 }
 
 /**
- * 打开弹幕窗口
+ * 创建并打开弹幕窗口
  * @param props
  */
 export function showDanMuView(props: BarrageSetting) {
@@ -104,14 +103,8 @@ export function hidenDanMuView() {
   barrageWin?.close();
 }
 
-/**
- * 更改语音朗读功能的开启
- * @param startSpeaking 是否开启朗读 true表示开启，反之表示不开启
- */
-export function changeBarrageSpeech(startSpeaking: boolean) {
-  barrageWin?.webContents.send('update-speech', startSpeaking);
-}
-
-export function changeDanMuVolume(volume: number) {
-  barrageWin?.webContents.send('update-volume', volume);
+export function changeBarrageSpeaking(props: BarrageSetting) {
+  console.log("sent barrage-speaking-change")
+  // 发送更新消息，在preload中使用ipcRenderer监听
+  barrageWin?.webContents.send('barrage-speaking-change', props);
 }
