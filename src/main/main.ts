@@ -20,8 +20,7 @@ import { resolveHtmlPath } from './util';
 import {
   hidenDanMuView,
   showDanMuView,
-  changeDanMuVolume,
-  changeBarrageSpeech,
+  changeBarrageSpeaking
 } from './barrageWin';
 
 class AppUpdater {
@@ -41,7 +40,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 /**
- * 接收打开弹幕窗口的消息
+ * 监听打开弹幕窗口消息
  */
 ipcMain.on('show-danmu-view', async (event, args: BarrageSetting) => {
   console.log(args);
@@ -49,24 +48,17 @@ ipcMain.on('show-danmu-view', async (event, args: BarrageSetting) => {
 });
 
 /**
- * 接收关闭弹幕窗口的消息
+ * 监听关闭弹幕窗口消息
  */
 ipcMain.on('hide-danmu-view', async () => {
   await hidenDanMuView();
 });
 
 /**
- * 接收更改语音朗读功能是否开启的消息
+ * 监听更语音播报功参数变更消息
  */
-ipcMain.on('change-speech', async (event, args: boolean) => {
-  await changeBarrageSpeech(args);
-});
-
-/**
- * 接收更改音量的消息
- */
-ipcMain.on('change-volume', async (event, args: number) => {
-  await changeDanMuVolume(args);
+ipcMain.on('change-speaking', async (event, args: BarrageSetting) => {
+  await changeBarrageSpeaking(args);
 });
 
 if (process.env.NODE_ENV === 'production') {
