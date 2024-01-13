@@ -25,6 +25,14 @@ import {
 import { BarrageSetting } from 'page/page.types';
 import { Local } from 'global/enum';
 import { getLexicon } from 'global/i18n';
+import {
+  AsiaIcon,
+  CodeIcon,
+  MicIcon,
+  MicMuteIcon,
+  RoomIcon,
+  VolumeIcon,
+} from 'components/icon';
 
 export default function MainView() {
   const mainForm = useForm<BarrageSetting>();
@@ -99,53 +107,68 @@ export default function MainView() {
       <Form formRef={mainForm}>
         <StackPanel direction="column" alignItems="flex-start">
           {/* 房间号 */}
-          <FormLabel label={i18N.roomId}>
-            <FormControl valuePath="roomId">
-              <TextField
-                style={{ marginLeft: '10px' }}
-                // defaultValue={8638358}
-                placeholder={i18N.roomId_placeholder}
-                onChange={handleRoomIdTextFieldChange}
-              />
-            </FormControl>
-          </FormLabel>
+          <StackPanel alignItems="center">
+            <RoomIcon />
+            <FormLabel label={i18N.roomId}>
+              <FormControl valuePath="roomId">
+                <TextField
+                  style={{ marginLeft: '10px' }}
+                  // defaultValue={8638358}
+                  placeholder={i18N.roomId_placeholder}
+                  onChange={handleRoomIdTextFieldChange}
+                />
+              </FormControl>
+            </FormLabel>
+          </StackPanel>
 
           {/* 语音播报 */}
-          <FormLabel label={speechLabel}>
-            <FormControl valuePath="speech">
-              <Switch defaultChecked onChange={handleSpeechChange} />
-            </FormControl>
-          </FormLabel>
+          <StackPanel alignItems="center">
+            {speech === true ? <MicIcon /> : <MicMuteIcon />}
+            <FormLabel label={speechLabel}>
+              <FormControl valuePath="speech">
+                <Switch defaultChecked onChange={handleSpeechChange} />
+              </FormControl>
+            </FormLabel>
+          </StackPanel>
 
           {/* 音量 */}
-          <FormLabel label={i18N.volume} style={{ marginBottom: 10 }}>
-            <StackPanel style={{ width: 200, marginLeft: 10 }}>
-              <FormControl valuePath="volume">
-                <Slider defaultValue={35} onChange={handleVolumeChange} />
-              </FormControl>
-            </StackPanel>
-          </FormLabel>
+          <StackPanel alignItems="center" style={{ marginBottom: 10 }}>
+            <VolumeIcon />
+            <FormLabel label={i18N.volume}>
+              <StackPanel style={{ width: 200, marginLeft: 10 }}>
+                <FormControl valuePath="volume">
+                  <Slider defaultValue={35} onChange={handleVolumeChange} />
+                </FormControl>
+              </StackPanel>
+            </FormLabel>
+          </StackPanel>
 
           {/* 语言切换 */}
-          <FormLabel
-            label={i18N.language}
-            style={{ borderTop: '1px solid #ababab' }}
-          >
-            <RadioGroup
-              defaultValue={Local.zhCN}
-              name="language"
-              onChange={handleLanguageRadioGroupChange}
+          <StackPanel alignItems="center">
+            <AsiaIcon />
+            <FormLabel
+              label={i18N.language}
+              style={{ borderTop: '1px solid #ababab' }}
             >
-              <StackPanel direction="column" alignItems="flex-start">
-                <FormLabel label="中文简体" labelPlacement={Placement.right}>
-                  <Radio value={Local.zhCN} name="language" />
-                </FormLabel>
-                <FormLabel label="English(US)" labelPlacement={Placement.right}>
-                  <Radio value={Local.enUS} name="language" />
-                </FormLabel>
-              </StackPanel>
-            </RadioGroup>
-          </FormLabel>
+              <RadioGroup
+                defaultValue={Local.zhCN}
+                name="language"
+                onChange={handleLanguageRadioGroupChange}
+              >
+                <StackPanel direction="column" alignItems="flex-start">
+                  <FormLabel label="中文简体" labelPlacement={Placement.right}>
+                    <Radio value={Local.zhCN} name="language" />
+                  </FormLabel>
+                  <FormLabel
+                    label="English(US)"
+                    labelPlacement={Placement.right}
+                  >
+                    <Radio value={Local.enUS} name="language" />
+                  </FormLabel>
+                </StackPanel>
+              </RadioGroup>
+            </FormLabel>
+          </StackPanel>
         </StackPanel>
       </Form>
       <div className="main__bottom">
@@ -168,7 +191,12 @@ export default function MainView() {
           </Button>
         )}
       </div>
-      <div className="copyright">{i18N.author}</div>
+      <div className="copyright">
+        <StackPanel alignItems="center">
+          <CodeIcon />
+          {i18N.author}
+        </StackPanel>
+      </div>
     </>
   );
 }
