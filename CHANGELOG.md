@@ -1,3 +1,12 @@
+# [1.0.0](https://github.com/liuxian496/iceborne/compare/v0.2.0...v1.0.0) (2024-01-13)
+
+
+### Features
+
+* 添加功能图标 ([e982140](https://github.com/liuxian496/iceborne/commit/e982140fb05a24797eb85f9e8d73cd52fce1395a))
+
+
+
 # [0.2.0](https://github.com/liuxian496/iceborne/compare/v0.1.4...v0.2.0) (2024-01-12)
 
 
