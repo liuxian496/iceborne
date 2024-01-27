@@ -1,6 +1,6 @@
 # Iceborne
 
-Iceborne 弹幕播报，是一个简易版的，支持 mac os 系统的弹幕播报应用。基于 Electron 和[bilibili 线上弹幕姬](https://link.bilibili.com/ctool/vtuber/)开发，是一个纯前端的直播弹幕显示和播报工具。
+Iceborne 弹幕播报，是一个简易版的，支持 mac os 系统的弹幕播报应用。基于 Electron 和[bilibili在线弹幕姬](https://link.bilibili.com/ctool/vtuber/)开发，是一个纯前端的直播弹幕显示和播报工具。
 
 ## 功能简介
 
@@ -22,13 +22,13 @@ Iceborne 弹幕播报，是一个简易版的，支持 mac os 系统的弹幕播
 
 ### 4. 弹幕样式设置
 
-可以在[bilibili 线上弹幕姬](https://link.bilibili.com/ctool/vtuber/)中的样式设置视图，设置自己喜欢的弹幕样式。
+可以在[bilibili在线弹幕姬](https://link.bilibili.com/ctool/vtuber/)中的样式设置视图，设置自己喜欢的弹幕样式。
 
 ## 使用方式
 
 ### 1. 获取房间号
 
-（1）用浏览器打开[bilibili 线上弹幕姬](https://link.bilibili.com/ctool/vtuber/)建议使用 Chrome。
+（1）用浏览器打开[bilibili在线弹幕姬](https://link.bilibili.com/ctool/vtuber/)建议使用 Chrome。
 
 <p>
 （2）如果没有登录过网页版的 bilibili，需要扫码登录。
