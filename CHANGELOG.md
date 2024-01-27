@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/liuxian496/iceborne/compare/v1.0.0...v1.1.0) (2024-01-27)
+
+
+### Bug Fixes
+
+* 修复electron不能安装的问题 ([77f6644](https://github.com/liuxian496/iceborne/commit/77f664473db701cb77d79e61ca746cb923e03388))
+
+
+
 # [1.0.0](https://github.com/liuxian496/iceborne/compare/v0.2.0...v1.0.0) (2024-01-13)
 
 
