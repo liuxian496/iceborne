@@ -1,3 +1,13 @@
+# [1.2.0](https://github.com/liuxian496/iceborne/compare/v1.1.0...v1.2.0) (2024-03-15)
+
+
+### Features
+
+* 图标支持无障碍 ([af5cbba](https://github.com/liuxian496/iceborne/commit/af5cbba7d49c8cfbc65729adbd50e33ab6850a07))
+* 支持miebo云插件，添加跳转到云插件管理后台的功能，优化bilibili云弹幕插件的鉴权逻辑。 ([4a3ad00](https://github.com/liuxian496/iceborne/commit/4a3ad003359a0522c6f9445de6d364bacc0e797f))
+
+
+
 # [1.1.0](https://github.com/liuxian496/iceborne/compare/v1.0.0...v1.1.0) (2024-01-27)
 
 
