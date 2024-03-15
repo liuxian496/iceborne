@@ -1,6 +1,11 @@
-export function RoomIcon() {
+export interface IconProps {
+  'aria-label': string;
+}
+
+export function RoomIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -18,9 +23,10 @@ export function RoomIcon() {
   );
 }
 
-export function MicIcon() {
+export function MicIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -34,9 +40,10 @@ export function MicIcon() {
   );
 }
 
-export function MicMuteIcon() {
+export function MicMuteIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -50,9 +57,10 @@ export function MicMuteIcon() {
   );
 }
 
-export function VolumeIcon() {
+export function VolumeIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -67,9 +75,10 @@ export function VolumeIcon() {
   );
 }
 
-export function CodeIcon() {
+export function CodeIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -83,9 +92,10 @@ export function CodeIcon() {
   );
 }
 
-export function AsiaIcon() {
+export function AsiaIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -95,6 +105,41 @@ export function AsiaIcon() {
     >
       <path d="m10.495 6.92 1.278-.619a.483.483 0 0 0 .126-.782c-.252-.244-.682-.139-.932.107-.23.226-.513.373-.816.53l-.102.054c-.338.178-.264.626.1.736a.476.476 0 0 0 .346-.027ZM7.741 9.808V9.78a.413.413 0 1 1 .783.183l-.22.443a.602.602 0 0 1-.12.167l-.193.185a.36.36 0 1 1-.5-.516l.112-.108a.453.453 0 0 0 .138-.326ZM5.672 12.5l.482.233A.386.386 0 1 0 6.32 12h-.416a.702.702 0 0 1-.419-.139l-.277-.206a.302.302 0 1 0-.298.52l.761.325Z" />
       <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM1.612 10.867l.756-1.288a1 1 0 0 1 1.545-.225l1.074 1.005a.986.986 0 0 0 1.36-.011l.038-.037a.882.882 0 0 0 .26-.755c-.075-.548.37-1.033.92-1.099.728-.086 1.587-.324 1.728-.957.086-.386-.114-.83-.361-1.2-.207-.312 0-.8.374-.8.123 0 .24-.055.318-.15l.393-.474c.196-.237.491-.368.797-.403.554-.064 1.407-.277 1.583-.973.098-.391-.192-.634-.484-.88-.254-.212-.51-.426-.515-.741a6.998 6.998 0 0 1 3.425 7.692 1.015 1.015 0 0 0-.087-.063l-.316-.204a1 1 0 0 0-.977-.06l-.169.082a1 1 0 0 1-.741.051l-1.021-.329A1 1 0 0 0 11.205 9h-.165a1 1 0 0 0-.945.674l-.172.499a1 1 0 0 1-.404.514l-.802.518a1 1 0 0 0-.458.84v.455a1 1 0 0 0 1 1h.257a1 1 0 0 1 .542.16l.762.49a.998.998 0 0 0 .283.126 7.001 7.001 0 0 1-9.49-3.409Z" />
+    </svg>
+  );
+}
+
+export function CloudIcon(props: IconProps) {
+  return (
+    <svg
+      {...props}
+      className="litten-svg"
+      width="16"
+      height="16"
+      style={{ marginRight: 10 }}
+      color="#1976d2"
+      viewBox="0 0 16 16"
+    >
+      <path d="M13.405 7.027a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 13H13a3 3 0 0 0 .405-5.973z" />
+    </svg>
+  );
+}
+
+export function CloudManageIcon(props: IconProps) {
+  return (
+    <svg
+      {...props}
+      className="litten-svg"
+      width="16"
+      height="16"
+      style={{ marginRight: 10 }}
+      color="#1976d2"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fillRule="evenodd"
+        d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z"
+      />
     </svg>
   );
 }

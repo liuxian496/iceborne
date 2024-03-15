@@ -20,8 +20,12 @@ import { resolveHtmlPath } from './util';
 import {
   hidenDanMuView,
   showDanMuView,
-  changeBarrageSpeaking
+  changeBarrageSpeaking,
 } from './barrageWin';
+import {
+  hideBilibiliManageView,
+  showBilibiliManageView,
+} from './bilibiliManageWin';
 
 class AppUpdater {
   constructor() {
@@ -52,6 +56,21 @@ ipcMain.on('show-danmu-view', async (event, args: BarrageSetting) => {
  */
 ipcMain.on('hide-danmu-view', async () => {
   await hidenDanMuView();
+});
+
+/**
+ * 监听打开bilibili管理窗口的消息
+ */
+ipcMain.on('show-bilibili-manage-view', async (event, args: BarrageSetting) => {
+  console.log('show Bilibili manage');
+  await showBilibiliManageView();
+});
+
+/**
+ * 监听关闭bilibili管理窗口的消息
+ */
+ipcMain.on('hide-bilibili-manage-view', async () => {
+  await hideBilibiliManageView();
 });
 
 /**
@@ -166,3 +185,12 @@ app
     });
   })
   .catch(console.log);
+
+/**
+ * 发送bilibili管理窗口关闭的消息
+ */
+function bilibiliManageWinClosed() {
+  mainWindow?.webContents.send('bilibili-manage-win-closed');
+}
+
+export { bilibiliManageWinClosed };

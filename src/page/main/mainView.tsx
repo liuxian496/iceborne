@@ -23,10 +23,12 @@ import {
 } from 'litten';
 
 import { BarrageSetting } from 'page/page.types';
-import { Local } from 'global/enum';
+import { Local, CloudSource } from 'global/enum';
 import { getLexicon } from 'global/i18n';
 import {
   AsiaIcon,
+  CloudIcon,
+  CloudManageIcon,
   CodeIcon,
   MicIcon,
   MicMuteIcon,
@@ -41,10 +43,15 @@ export default function MainView() {
 
   const [connect, setConnect] = useState(false);
 
+  const [bilibiliManageViewOpened, setbilibiliManageViewOpened] =
+    useState(false);
+
   const [speechLabel, setSpeechLabel] = useState('');
   const [speech, setSpeech] = useState(true);
 
   const [i18N, setI18N] = useState(getLexicon(Local.zhCN));
+
+  const [cloudSource, setCloudSource] = useState(CloudSource.miebo);
 
   useEffect(() => {
     if (speech === true) {
@@ -53,6 +60,12 @@ export default function MainView() {
       setSpeechLabel(i18N.stopSpeaking);
     }
   }, [i18N, speech]);
+
+  useEffect(() => {
+    window.electron?.onbilibiliManageWinClosed(() => {
+      setbilibiliManageViewOpened(false);
+    });
+  }, []);
 
   const handleRoomIdTextFieldChange = (e: any) => {
     const { value } = e;
@@ -71,6 +84,16 @@ export default function MainView() {
   const handleDisconnectBtuClick = () => {
     window.electron?.sentHideDanmuView();
     setConnect(false);
+  };
+
+  const handleShowBilibiliManageBtuClick = () => {
+    window.electron?.sentShowBilibiliManageView();
+    setbilibiliManageViewOpened(true);
+  };
+
+  const handleHideBilibiliManageBtuClick = () => {
+    window.electron?.sentHideBilibiliManageView();
+    setbilibiliManageViewOpened(false);
   };
 
   const handleSpeechChange = (e: LittenCheckedChangeEvent) => {
@@ -102,28 +125,133 @@ export default function MainView() {
     }
   };
 
+  const handleCloudSourceRadioGroupChange = (e: LittenCheckedChangeEvent) => {
+    const source = e.value as CloudSource;
+    // 切换云插件来源，需要关闭弹幕窗体
+    window.electron?.sentHideDanmuView();
+    setConnect(false);
+
+    if (source) {
+      setCloudSource(source);
+    }
+  };
+
   return (
     <>
       <Form formRef={mainForm}>
         <StackPanel direction="column" alignItems="flex-start">
-          {/* 房间号 */}
+          {/* 云插件来源 */}
           <StackPanel alignItems="center">
-            <RoomIcon />
-            <FormLabel label={i18N.roomId}>
-              <FormControl valuePath="roomId">
-                <TextField
-                  style={{ marginLeft: '10px' }}
-                  // defaultValue={8638358}
-                  placeholder={i18N.roomId_placeholder}
-                  onChange={handleRoomIdTextFieldChange}
-                />
+            <CloudIcon aria-label={i18N.cloudSource} />
+            <FormLabel
+              label={i18N.cloudSource}
+              style={{
+                borderBottom: '1px solid #ababab',
+                marginTop: '10px',
+                marginBottom: '10px',
+              }}
+            >
+              <FormControl valuePath="cloudSource">
+                <RadioGroup
+                  defaultValue={CloudSource.miebo}
+                  name="cloudSource"
+                  onChange={handleCloudSourceRadioGroupChange}
+                >
+                  <StackPanel direction="column" alignItems="flex-start">
+                    <FormLabel
+                      label="bilibili"
+                      labelPlacement={Placement.right}
+                    >
+                      <Radio value={CloudSource.bilibili} name="cloudSource" />
+                    </FormLabel>
+                    <FormLabel label="miebo" labelPlacement={Placement.right}>
+                      <Radio value={CloudSource.miebo} name="cloudSource" />
+                    </FormLabel>
+                  </StackPanel>
+                </RadioGroup>
               </FormControl>
             </FormLabel>
           </StackPanel>
 
+          {/* 云插件设置后台 */}
+          <StackPanel alignItems="center">
+            <CloudManageIcon aria-label={i18N.cloudManage} />
+            <FormLabel
+              label={i18N.cloudManage}
+              style={{
+                marginTop: '10px',
+                marginBottom: '10px',
+              }}
+            >
+              {cloudSource === CloudSource.bilibili ? (
+                bilibiliManageViewOpened === false ? (
+                  <Button
+                    mode={Mode.text}
+                    onClick={handleShowBilibiliManageBtuClick}
+                  >
+                    {i18N.openBilibiliDanmuManage}
+                  </Button>
+                ) : (
+                  <Button
+                    mode={Mode.text}
+                    onClick={handleHideBilibiliManageBtuClick}
+                  >
+                    {i18N.closeBilibiliDanmuManage}
+                  </Button>
+                )
+              ) : (
+                <a
+                  href="https://kconsole.miebo.cn/room"
+                  target="_blank"
+                  className="litten-button--text"
+                  style={{
+                    marginLeft: 10,
+                    padding: '8.5px 0 8px 0',
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  {i18N.openMieboManage}
+                </a>
+              )}
+            </FormLabel>
+          </StackPanel>
+
+          {/* 房间号和插件号 */}
+          {cloudSource === CloudSource.bilibili ? (
+            <StackPanel alignItems="center">
+              <RoomIcon aria-label={i18N.roomId} />
+              <FormLabel label={i18N.roomId}>
+                <FormControl key="roomId" valuePath="roomId">
+                  <TextField
+                    style={{ marginLeft: '10px' }}
+                    placeholder={i18N.roomIdPlaceholder}
+                    onChange={handleRoomIdTextFieldChange}
+                  />
+                </FormControl>
+              </FormLabel>
+            </StackPanel>
+          ) : (
+            <StackPanel alignItems="center">
+              <RoomIcon aria-label={i18N.pluginId} />
+              <FormLabel label={i18N.pluginId}>
+                <FormControl key="plugin" valuePath="pluginId">
+                  <TextField
+                    style={{ marginLeft: '10px' }}
+                    placeholder={i18N.pluginIdPlaceholder}
+                    onChange={handleRoomIdTextFieldChange}
+                  />
+                </FormControl>
+              </FormLabel>
+            </StackPanel>
+          )}
+
           {/* 语音播报 */}
           <StackPanel alignItems="center">
-            {speech === true ? <MicIcon /> : <MicMuteIcon />}
+            {speech === true ? (
+              <MicIcon aria-label={speechLabel} />
+            ) : (
+              <MicMuteIcon aria-label={speechLabel} />
+            )}
             <FormLabel label={speechLabel}>
               <FormControl valuePath="speech">
                 <Switch defaultChecked onChange={handleSpeechChange} />
@@ -133,11 +261,11 @@ export default function MainView() {
 
           {/* 音量 */}
           <StackPanel alignItems="center" style={{ marginBottom: 10 }}>
-            <VolumeIcon />
+            <VolumeIcon aria-label={i18N.volume} />
             <FormLabel label={i18N.volume}>
               <StackPanel style={{ width: 200, marginLeft: 10 }}>
                 <FormControl valuePath="volume">
-                  <Slider defaultValue={35} onChange={handleVolumeChange} />
+                  <Slider defaultValue={20} onChange={handleVolumeChange} />
                 </FormControl>
               </StackPanel>
             </FormLabel>
@@ -145,7 +273,7 @@ export default function MainView() {
 
           {/* 语言切换 */}
           <StackPanel alignItems="center">
-            <AsiaIcon />
+            <AsiaIcon aria-label={i18N.language} />
             <FormLabel
               label={i18N.language}
               style={{ borderTop: '1px solid #ababab' }}
@@ -193,7 +321,7 @@ export default function MainView() {
       </div>
       <div className="copyright">
         <StackPanel alignItems="center">
-          <CodeIcon />
+          <CodeIcon aria-label={i18N.author} />
           {i18N.author}
         </StackPanel>
       </div>
