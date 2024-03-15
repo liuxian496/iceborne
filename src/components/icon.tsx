@@ -1,6 +1,11 @@
-export function RoomIcon() {
+export interface IconProps {
+  'aria-label': string;
+}
+
+export function RoomIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -18,9 +23,10 @@ export function RoomIcon() {
   );
 }
 
-export function MicIcon() {
+export function MicIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -34,9 +40,10 @@ export function MicIcon() {
   );
 }
 
-export function MicMuteIcon() {
+export function MicMuteIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -50,9 +57,10 @@ export function MicMuteIcon() {
   );
 }
 
-export function VolumeIcon() {
+export function VolumeIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -67,9 +75,10 @@ export function VolumeIcon() {
   );
 }
 
-export function CodeIcon() {
+export function CodeIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -83,9 +92,10 @@ export function CodeIcon() {
   );
 }
 
-export function AsiaIcon() {
+export function AsiaIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -99,9 +109,10 @@ export function AsiaIcon() {
   );
 }
 
-export function CloudIcon() {
+export function CloudIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"
@@ -114,9 +125,10 @@ export function CloudIcon() {
   );
 }
 
-export function CloudManageIcon() {
+export function CloudManageIcon(props: IconProps) {
   return (
     <svg
+      {...props}
       className="litten-svg"
       width="16"
       height="16"

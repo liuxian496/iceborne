@@ -142,7 +142,7 @@ export default function MainView() {
         <StackPanel direction="column" alignItems="flex-start">
           {/* 云插件来源 */}
           <StackPanel alignItems="center">
-            <CloudIcon />
+            <CloudIcon aria-label={i18N.cloudSource} />
             <FormLabel
               label={i18N.cloudSource}
               style={{
@@ -175,7 +175,7 @@ export default function MainView() {
 
           {/* 云插件设置后台 */}
           <StackPanel alignItems="center">
-            <CloudManageIcon />
+            <CloudManageIcon aria-label={i18N.cloudManage} />
             <FormLabel
               label={i18N.cloudManage}
               style={{
@@ -219,12 +219,11 @@ export default function MainView() {
           {/* 房间号和插件号 */}
           {cloudSource === CloudSource.bilibili ? (
             <StackPanel alignItems="center">
-              <RoomIcon />
+              <RoomIcon aria-label={i18N.roomId} />
               <FormLabel label={i18N.roomId}>
                 <FormControl key="roomId" valuePath="roomId">
                   <TextField
                     style={{ marginLeft: '10px' }}
-                    defaultValue={8638358}
                     placeholder={i18N.roomIdPlaceholder}
                     onChange={handleRoomIdTextFieldChange}
                   />
@@ -233,12 +232,11 @@ export default function MainView() {
             </StackPanel>
           ) : (
             <StackPanel alignItems="center">
-              <RoomIcon />
+              <RoomIcon aria-label={i18N.pluginId} />
               <FormLabel label={i18N.pluginId}>
                 <FormControl key="plugin" valuePath="pluginId">
                   <TextField
                     style={{ marginLeft: '10px' }}
-                    defaultValue="4sF2W4O"
                     placeholder={i18N.pluginIdPlaceholder}
                     onChange={handleRoomIdTextFieldChange}
                   />
@@ -249,7 +247,11 @@ export default function MainView() {
 
           {/* 语音播报 */}
           <StackPanel alignItems="center">
-            {speech === true ? <MicIcon /> : <MicMuteIcon />}
+            {speech === true ? (
+              <MicIcon aria-label={speechLabel} />
+            ) : (
+              <MicMuteIcon aria-label={speechLabel} />
+            )}
             <FormLabel label={speechLabel}>
               <FormControl valuePath="speech">
                 <Switch defaultChecked onChange={handleSpeechChange} />
@@ -259,7 +261,7 @@ export default function MainView() {
 
           {/* 音量 */}
           <StackPanel alignItems="center" style={{ marginBottom: 10 }}>
-            <VolumeIcon />
+            <VolumeIcon aria-label={i18N.volume} />
             <FormLabel label={i18N.volume}>
               <StackPanel style={{ width: 200, marginLeft: 10 }}>
                 <FormControl valuePath="volume">
@@ -271,7 +273,7 @@ export default function MainView() {
 
           {/* 语言切换 */}
           <StackPanel alignItems="center">
-            <AsiaIcon />
+            <AsiaIcon aria-label={i18N.language} />
             <FormLabel
               label={i18N.language}
               style={{ borderTop: '1px solid #ababab' }}
@@ -319,7 +321,7 @@ export default function MainView() {
       </div>
       <div className="copyright">
         <StackPanel alignItems="center">
-          <CodeIcon />
+          <CodeIcon aria-label={i18N.author} />
           {i18N.author}
         </StackPanel>
       </div>
