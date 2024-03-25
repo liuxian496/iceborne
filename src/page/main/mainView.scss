@@ -8,6 +8,21 @@ $component-cls: 'main';
     justify-content: end;
     height: 100px;
   }
+
+  &__clouldManage {
+    min-height: 58px;
+  }
+
+  &__radio--panel {
+    .litten-formLabel__label {
+      width: 100px;
+    }
+  }
+}
+
+.dividing {
+  width: 100%;
+  border-bottom: 1px solid #ababab;
 }
 
 .copyright {
