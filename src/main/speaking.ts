@@ -22,6 +22,19 @@ function getBilibiliMessage(current: Element) {
   return value;
 }
 
+function getXiaoxiaoMessage(current: Element) {
+  let value = null;
+
+  const userNode = current.querySelector('.nickname') as HTMLElement;
+  const msgNode = current.querySelector('.text') as HTMLElement;
+
+  if (userNode !== null && msgNode !== null) {
+    value = `${userNode?.innerText}说${msgNode?.innerText}`;
+  }
+
+  return value;
+}
+
 function getMieboMessage(current: Element) {
   let value = null;
 
@@ -49,6 +62,8 @@ function getMessage(current: Element, cloudSource: CloudSource) {
 
   if (cloudSource === CloudSource.miebo) {
     value = getMieboMessage(current);
+  } else if (cloudSource === CloudSource.xiaoxiao) {
+    value = getXiaoxiaoMessage(current);
   } else {
     value = getBilibiliMessage(current);
   }
@@ -67,7 +82,14 @@ function startDanmuCirculate(cloudSource: CloudSource) {
         bilibiliDanmuElement !== undefined &&
         bilibiliDanmuElement.children.length > currentBroadcastIndex
       ) {
-        const current = bilibiliDanmuElement.children[currentBroadcastIndex];
+        const maxMessage = bilibiliDanmuElement.children.length;
+
+        const current =
+          cloudSource === CloudSource.xiaoxiao
+            ? bilibiliDanmuElement.children[
+                maxMessage - currentBroadcastIndex - 1
+              ]
+            : bilibiliDanmuElement.children[currentBroadcastIndex];
         // 如果有弹幕，收集，计数加1
         if (current) {
           const msg = getMessage(current, cloudSource);
@@ -83,6 +105,8 @@ function startDanmuCirculate(cloudSource: CloudSource) {
               currentBroadcastIndex += 1;
             };
           } else {
+            // msg返回null时，表示遇到无法解析的弹幕。计数加一，跳过
+            currentBroadcastIndex += 1;
             startDanmuCirculate(cloudSource);
           }
         } else {
@@ -101,11 +125,23 @@ function startDanmuCirculate(cloudSource: CloudSource) {
  */
 export function updateSpeech(speech: boolean, cloudSource: CloudSource) {
   if (bilibiliDanmuElement === undefined) {
-    if (cloudSource === CloudSource.miebo) {
-      [bilibiliDanmuElement] = document.getElementsByClassName('dock-ul');
-    } else {
-      [bilibiliDanmuElement] = document.getElementsByClassName('danmaku');
-      currentBroadcastIndex = bilibiliDanmuElement.children.length;
+    let current = undefined;
+    switch (cloudSource) {
+      case CloudSource.bilibili:
+        current = document.getElementsByClassName('danmaku');
+        break;
+      case CloudSource.miebo:
+        current = document.getElementsByClassName('dock-ul');
+        break;
+      case CloudSource.xiaoxiao:
+        current = document.getElementsByClassName('chatarea');
+        break;
+      default:
+        current = undefined;
+        break;
+    }
+    if (current) {
+      [bilibiliDanmuElement] = current;
     }
   }
 

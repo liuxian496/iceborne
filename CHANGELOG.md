@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/liuxian496/iceborne/compare/v1.2.0...v1.3.0) (2024-03-26)
+
+
+### Features
+
+* 支持Bilibili幻星互动平台H5插件，更改插件的加载方式。 ([d4d11e7](https://github.com/liuxian496/iceborne/commit/d4d11e7468c072c2a5cff0e92ec192f3ca704f98))
+
+
+
 # [1.2.0](https://github.com/liuxian496/iceborne/compare/v1.1.0...v1.2.0) (2024-03-15)
 
 

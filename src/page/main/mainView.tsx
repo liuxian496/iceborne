@@ -4,7 +4,7 @@ import './mainView.scss';
 import {
   LittenCheckedChangeEvent,
   LittenNumberChangeEvent,
-} from 'litten/build/types/components/control/control.types';
+} from 'litten/build/types/components/control/littenEvent.types';
 
 import {
   Button,
@@ -67,9 +67,9 @@ export default function MainView() {
     });
   }, []);
 
-  const handleRoomIdTextFieldChange = (e: any) => {
+  const handlePluginUrlTextFieldChange = (e: any) => {
     const { value } = e;
-    if (Number.isNaN(parseInt(value, 10))) {
+    if (value === '') {
       setLoading(true);
     } else {
       setLoading(false);
@@ -136,6 +136,59 @@ export default function MainView() {
     }
   };
 
+  function renderBilibiliManageView(opened: boolean) {
+    return opened === false ? (
+      <Button mode={Mode.text} onClick={handleShowBilibiliManageBtuClick}>
+        {i18N.openBilibiliDanmuManage}
+      </Button>
+    ) : (
+      <Button mode={Mode.text} onClick={handleHideBilibiliManageBtuClick}>
+        {i18N.closeBilibiliDanmuManage}
+      </Button>
+    );
+  }
+
+  function renderManagerView(cloudSource: CloudSource) {
+    switch (cloudSource) {
+      case CloudSource.bilibili:
+        return renderBilibiliManageView(bilibiliManageViewOpened);
+      case CloudSource.miebo:
+        return (
+          <a
+            href="https://kconsole.miebo.cn/room"
+            target="_blank"
+            className="litten-button--text"
+            style={{
+              marginLeft: 10,
+              padding: '8.5px 0 8px 0',
+              fontSize: '0.875rem',
+            }}
+            rel="noreferrer"
+          >
+            {i18N.openMieboManage}
+          </a>
+        );
+      case CloudSource.xiaoxiao:
+        return (
+          <a
+            href="https://play-live.bilibili.com/details/1666106151719"
+            target="_blank"
+            className="litten-button--text"
+            style={{
+              marginLeft: 10,
+              padding: '8.5px 0 8px 0',
+              fontSize: '0.875rem',
+            }}
+            rel="noreferrer"
+          >
+            {i18N.openXiaoxiaoManage}
+          </a>
+        );
+      default:
+        return null;
+    }
+  }
+
   return (
     <>
       <Form formRef={mainForm}>
@@ -146,35 +199,58 @@ export default function MainView() {
             <FormLabel
               label={i18N.cloudSource}
               style={{
-                borderBottom: '1px solid #ababab',
                 marginTop: '10px',
                 marginBottom: '10px',
               }}
             >
               <FormControl valuePath="cloudSource">
                 <RadioGroup
-                  defaultValue={CloudSource.miebo}
+                  defaultValue={CloudSource.xiaoxiao}
                   name="cloudSource"
                   onChange={handleCloudSourceRadioGroupChange}
                 >
-                  <StackPanel direction="column" alignItems="flex-start">
-                    <FormLabel
-                      label="bilibili"
-                      labelPlacement={Placement.right}
-                    >
-                      <Radio value={CloudSource.bilibili} name="cloudSource" />
-                    </FormLabel>
-                    <FormLabel label="miebo" labelPlacement={Placement.right}>
-                      <Radio value={CloudSource.miebo} name="cloudSource" />
-                    </FormLabel>
+                  <StackPanel direction="row" className='main__radio--panel'>
+                    <StackPanel direction="column" alignItems="flex-start">
+                      <FormLabel
+                        label="others"
+                        labelPlacement={Placement.right}
+                      >
+                        <Radio value={CloudSource.others} name="cloudSource" />
+                      </FormLabel>
+                      <FormLabel
+                        label="bilibili"
+                        labelPlacement={Placement.right}
+                      >
+                        <Radio
+                          value={CloudSource.bilibili}
+                          name="cloudSource"
+                        />
+                      </FormLabel>
+                    </StackPanel>
+                    <StackPanel direction="column" alignItems="flex-start">
+                      <FormLabel label="miebo" labelPlacement={Placement.right}>
+                        <Radio value={CloudSource.miebo} name="cloudSource" />
+                      </FormLabel>
+                      <FormLabel
+                        label="xiaoxiao"
+                        labelPlacement={Placement.right}
+                      >
+                        <Radio
+                          value={CloudSource.xiaoxiao}
+                          name="cloudSource"
+                        />
+                      </FormLabel>
+                    </StackPanel>
                   </StackPanel>
                 </RadioGroup>
               </FormControl>
             </FormLabel>
           </StackPanel>
 
+          <div className="dividing"></div>
+
           {/* 云插件设置后台 */}
-          <StackPanel alignItems="center">
+          <StackPanel alignItems="center" className='main__clouldManage'>
             <CloudManageIcon aria-label={i18N.cloudManage} />
             <FormLabel
               label={i18N.cloudManage}
@@ -183,67 +259,23 @@ export default function MainView() {
                 marginBottom: '10px',
               }}
             >
-              {cloudSource === CloudSource.bilibili ? (
-                bilibiliManageViewOpened === false ? (
-                  <Button
-                    mode={Mode.text}
-                    onClick={handleShowBilibiliManageBtuClick}
-                  >
-                    {i18N.openBilibiliDanmuManage}
-                  </Button>
-                ) : (
-                  <Button
-                    mode={Mode.text}
-                    onClick={handleHideBilibiliManageBtuClick}
-                  >
-                    {i18N.closeBilibiliDanmuManage}
-                  </Button>
-                )
-              ) : (
-                <a
-                  href="https://kconsole.miebo.cn/room"
-                  target="_blank"
-                  className="litten-button--text"
-                  style={{
-                    marginLeft: 10,
-                    padding: '8.5px 0 8px 0',
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  {i18N.openMieboManage}
-                </a>
-              )}
+              {renderManagerView(cloudSource)}
             </FormLabel>
           </StackPanel>
 
           {/* 房间号和插件号 */}
-          {cloudSource === CloudSource.bilibili ? (
-            <StackPanel alignItems="center">
-              <RoomIcon aria-label={i18N.roomId} />
-              <FormLabel label={i18N.roomId}>
-                <FormControl key="roomId" valuePath="roomId">
-                  <TextField
-                    style={{ marginLeft: '10px' }}
-                    placeholder={i18N.roomIdPlaceholder}
-                    onChange={handleRoomIdTextFieldChange}
-                  />
-                </FormControl>
-              </FormLabel>
-            </StackPanel>
-          ) : (
-            <StackPanel alignItems="center">
-              <RoomIcon aria-label={i18N.pluginId} />
-              <FormLabel label={i18N.pluginId}>
-                <FormControl key="plugin" valuePath="pluginId">
-                  <TextField
-                    style={{ marginLeft: '10px' }}
-                    placeholder={i18N.pluginIdPlaceholder}
-                    onChange={handleRoomIdTextFieldChange}
-                  />
-                </FormControl>
-              </FormLabel>
-            </StackPanel>
-          )}
+          <StackPanel alignItems="center">
+            <RoomIcon aria-label={i18N.pluginUrl} />
+            <FormLabel label={i18N.pluginUrl}>
+              <FormControl key="plugin" valuePath="pluginUrl">
+                <TextField
+                  style={{ marginLeft: '10px' }}
+                  placeholder={i18N.pluginUrlPlaceholder}
+                  onChange={handlePluginUrlTextFieldChange}
+                />
+              </FormControl>
+            </FormLabel>
+          </StackPanel>
 
           {/* 语音播报 */}
           <StackPanel alignItems="center">
@@ -271,13 +303,12 @@ export default function MainView() {
             </FormLabel>
           </StackPanel>
 
+          <div className="dividing"></div>
+
           {/* 语言切换 */}
           <StackPanel alignItems="center">
             <AsiaIcon aria-label={i18N.language} />
-            <FormLabel
-              label={i18N.language}
-              style={{ borderTop: '1px solid #ababab' }}
-            >
+            <FormLabel label={i18N.language}>
               <RadioGroup
                 defaultValue={Local.zhCN}
                 name="language"

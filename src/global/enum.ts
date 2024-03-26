@@ -4,6 +4,8 @@ export enum Local {
 }
 
 export enum CloudSource {
+  others = 'others',
   bilibili = 'bilibili',
   miebo = 'miebo',
+  xiaoxiao = 'xiaoxiao',
 }

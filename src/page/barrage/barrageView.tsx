@@ -10,7 +10,6 @@ export default function Barrage() {
   return (
     <>
       <div className="barrage__overlay">danmu</div>
-      {/* <span>roomId:{roomId}</span> */}
       <div className="barrage">danmu</div>
     </>
   );

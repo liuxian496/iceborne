@@ -16,13 +16,9 @@ export interface Lexicon {
    */
   stopSpeaking: string;
   /**
-   * 房间号
+   * 插件地址
    */
-  roomId: string;
-  /**
-   * 插件号
-   */
-  pluginId: string;
+  pluginUrl: string;
   /**
    * 音量
    */
@@ -32,13 +28,9 @@ export interface Lexicon {
    */
   language: string;
   /**
-   * 房间号水印
+   * 插件地址水印
    */
-  roomIdPlaceholder: string;
-  /**
-   * 插件号水印
-   */
-  pluginIdPlaceholder: string;
+  pluginUrlPlaceholder: string;
   /**
    * 连接
    */
@@ -59,6 +51,10 @@ export interface Lexicon {
    * 打开miebo管理后台
    */
   openMieboManage: string;
+  /**
+   * 打开xiaoxiao管理后台
+   */
+  openXiaoxiaoManage: string;
   /**
    * 作者
    */

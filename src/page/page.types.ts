@@ -6,13 +6,9 @@ export interface BarrageSetting {
    */
   cloudSource: CloudSource;
   /**
-   * 房间号
+   * 插件地址
    */
-  roomId: string;
-  /**
-   * 插件号
-   */
-  pluginId: string;
+  pluginUrl: string;
   /**
    * 是否启用语音播放
    */
