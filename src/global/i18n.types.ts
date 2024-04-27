@@ -56,6 +56,10 @@ export interface Lexicon {
    */
   openXiaoxiaoManage: string;
   /**
+   * 打开blc管理后台
+   */
+  openBlcManage: string;
+  /**
    * 作者
    */
   author: string;

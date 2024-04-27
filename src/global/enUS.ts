@@ -13,6 +13,7 @@ const enUS = {
   closeBilibiliDanmuManage: 'close bilibili danmu manage view',
   openMieboManage: 'open miebo manage view',
   openXiaoxiaoManage: 'open xiaoxiao manage view',
+  openBlcManage: 'open blc manage view',
   author: 'Author：Ford',
 };
 

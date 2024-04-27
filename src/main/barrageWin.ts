@@ -30,9 +30,58 @@ function setXiaoxiaoContents(pluginUrl: string) {
   );
 
   barrageWin?.loadURL(
-    `https://bilichat.obh.live/#/?${pluginUrl.split('?')[0]}`
+    pluginUrl
+    // `https://bilichat.obh.live/#/?${pluginUrl.split('?')[0]}`
   );
 }
+
+function setXubaoContents(pluginUrl: string) {
+  barrageWin?.webContents.insertCSS(
+    'body { flex-direction: column;overflow:hidden !important;background-color:rgba(0, 0, 0, 0.25); }'
+  );
+  barrageWin?.webContents.insertCSS(
+    '.ice--itemAvatar { display: flex;align-items: center;font-size: 24px; }'
+  );
+  barrageWin?.webContents.insertCSS('.ice--item img { width:60px }');
+  barrageWin?.webContents.insertCSS(
+    '.ice--item .text { padding-left:50px;font-size:24px; }'
+  );
+  barrageWin?.webContents.insertCSS(
+    '.ice--itemAvatar .text { color: #08CBD0;padding-left:0; }'
+  );
+  barrageWin?.webContents.insertCSS('#items { overflow: auto;height:100%}');
+
+  barrageWin?.webContents.executeJavaScript(
+    `
+    let main = document.getElementById("div_BiLiveChatOutputer_main");
+    let msgContainer = document.getElementById("div_BiLiveChatOutputer");
+    main.style.flex = 'auto';
+    main.style.overflow = 'hidden';
+    msgContainer.style.display = 'none';
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.id = "items";
+
+    main.prepend(itemsDiv);
+
+    `
+  );
+  barrageWin?.loadURL(pluginUrl);
+}
+
+function setBlcContents(pluginUrl: string) {
+  barrageWin?.webContents.insertCSS(
+    'html body { display:flex;flex-direction: column;background-color:rgba(0, 0, 0, 0.25) !important; }'
+  );
+  barrageWin?.webContents.insertCSS(
+    '#author-name { background-color: transparent !important; center;font-size: 18px;color:#fff !important }'
+  );
+
+  barrageWin?.webContents.insertCSS('#message { color:#fff !important;font-size: 18px; }');
+
+  barrageWin?.loadURL(pluginUrl);
+}
+
 
 /**
  * 加载miebo云直播插件
@@ -52,7 +101,7 @@ function createDanMuView(props: BarrageSetting) {
 
   barrageWin = new BrowserWindow({
     show: false,
-    width: 245,
+    width: 300,
     height: 400,
     type: 'panel',
     frame: false,
@@ -104,12 +153,22 @@ function createDanMuView(props: BarrageSetting) {
     `
   );
 
-  if (cloudSource === CloudSource.miebo) {
-    setMieboContents(pluginUrl);
-  } else if (cloudSource === CloudSource.xiaoxiao) {
-    setXiaoxiaoContents(pluginUrl);
-  } else {
-    setBilibiliContents(pluginUrl);
+  switch (cloudSource) {
+    case CloudSource.miebo:
+      setMieboContents(pluginUrl);
+      break;
+    case CloudSource.xiaoxiao:
+      setXiaoxiaoContents(pluginUrl);
+      break;
+    case CloudSource.xubao:
+      setXubaoContents(pluginUrl);
+      break;
+    case CloudSource.blc:
+      setBlcContents(pluginUrl);
+      break;
+    default:
+      setBilibiliContents(pluginUrl);
+      break;
   }
 
   barrageWin.once('ready-to-show', () => {

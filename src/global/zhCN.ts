@@ -14,6 +14,7 @@ const zhCN = {
   closeBilibiliDanmuManage: '关闭bilibili弹幕姬后台',
   openMieboManage: '打开miebo管理后台',
   openXiaoxiaoManage: '打开xiaoxiao管理后台',
+  openBlcManage: '打开blc管理后台',
   author: '作者：弗特马克贝因',
 };
 

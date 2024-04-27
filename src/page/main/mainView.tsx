@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react';
 import './mainView.scss';
 
+import { Button } from 'litten/dist/button';
+import { Radio } from 'litten/dist/radio';
+import { RadioGroup } from 'litten/dist/radioGroup';
+import { Slider } from 'litten/dist/slider';
+import { StackPanel } from 'litten/dist/stackPanel';
+import { Switch } from 'litten/dist/switch';
+import { TextField } from 'litten/dist/textField';
+import { Mode, Placement } from 'litten/dist/global';
+
+import { Form } from 'litten/dist/form';
+import { FormControl } from 'litten/dist/formControl';
+import { FormLabel } from 'litten/dist/formLabel';
+import { useForm } from 'litten/dist/useForm';
+
 import {
   LittenCheckedChangeEvent,
   LittenNumberChangeEvent,
-} from 'litten/build/types/components/control/littenEvent.types';
-
-import {
-  Button,
-  Switch,
-  Form,
-  FormControl,
-  FormLabel,
-  Mode,
-  TextField,
-  useForm,
-  StackPanel,
-  Slider,
-  RadioGroup,
-  Radio,
-  Placement,
-} from 'litten';
+} from 'litten/dist/components/control/littenEvent.types';
 
 import { BarrageSetting } from 'page/page.types';
 import { Local, CloudSource } from 'global/enum';
@@ -184,6 +182,22 @@ export default function MainView() {
             {i18N.openXiaoxiaoManage}
           </a>
         );
+      case CloudSource.blc:
+        return (
+          <a
+            href="https://play-live.bilibili.com/details/1675336975685"
+            target="_blank"
+            className="litten-button--text"
+            style={{
+              marginLeft: 10,
+              padding: '8.5px 0 8px 0',
+              fontSize: '0.875rem',
+            }}
+            rel="noreferrer"
+          >
+            {i18N.openBlcManage}
+          </a>
+        );
       default:
         return null;
     }
@@ -205,11 +219,11 @@ export default function MainView() {
             >
               <FormControl valuePath="cloudSource">
                 <RadioGroup
-                  defaultValue={CloudSource.xiaoxiao}
+                  defaultValue={CloudSource.blc}
                   name="cloudSource"
                   onChange={handleCloudSourceRadioGroupChange}
                 >
-                  <StackPanel direction="row" className='main__radio--panel'>
+                  <StackPanel direction="row" className="main__radio--panel">
                     <StackPanel direction="column" alignItems="flex-start">
                       <FormLabel
                         label="others"
@@ -231,14 +245,8 @@ export default function MainView() {
                       <FormLabel label="miebo" labelPlacement={Placement.right}>
                         <Radio value={CloudSource.miebo} name="cloudSource" />
                       </FormLabel>
-                      <FormLabel
-                        label="xiaoxiao"
-                        labelPlacement={Placement.right}
-                      >
-                        <Radio
-                          value={CloudSource.xiaoxiao}
-                          name="cloudSource"
-                        />
+                      <FormLabel label="blc" labelPlacement={Placement.right}>
+                        <Radio value={CloudSource.blc} name="cloudSource" />
                       </FormLabel>
                     </StackPanel>
                   </StackPanel>
@@ -250,7 +258,7 @@ export default function MainView() {
           <div className="dividing"></div>
 
           {/* 云插件设置后台 */}
-          <StackPanel alignItems="center" className='main__clouldManage'>
+          <StackPanel alignItems="center" className="main__clouldManage">
             <CloudManageIcon aria-label={i18N.cloudManage} />
             <FormLabel
               label={i18N.cloudManage}
