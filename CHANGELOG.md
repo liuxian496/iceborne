@@ -1,3 +1,16 @@
+## [1.4.1](https://github.com/liuxian496/iceborne/compare/v1.4.0...v1.4.1) (2024-04-27)
+
+
+
+# [1.4.0](https://github.com/liuxian496/iceborne/compare/v1.3.0...v1.4.0) (2024-04-27)
+
+
+### Features
+
+* 支持弹幕选择blc源 ([5a22ff9](https://github.com/liuxian496/iceborne/commit/5a22ff906fa7ccb431e02e4776129328962f92fa))
+
+
+
 # [1.3.0](https://github.com/liuxian496/iceborne/compare/v1.2.0...v1.3.0) (2024-03-26)
 
 

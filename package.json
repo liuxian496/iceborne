@@ -3,6 +3,9 @@
   "description": "",
   "keywords": [
     "react",
+    "danmu",
+    "bilibili",
+    "macos",
     "typescript"
   ],
   "license": "MIT",
@@ -79,7 +82,7 @@
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.3.0",
-    "litten": "^0.8.5",
+    "litten": "^0.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
@@ -251,5 +254,5 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
-  "version": "1.3.0"
+  "version": "1.4.1"
 }

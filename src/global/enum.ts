@@ -8,4 +8,6 @@ export enum CloudSource {
   bilibili = 'bilibili',
   miebo = 'miebo',
   xiaoxiao = 'xiaoxiao',
+  blc = 'blc',
+  xubao = 'xubao'
 }

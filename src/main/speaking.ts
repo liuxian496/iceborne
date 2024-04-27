@@ -6,7 +6,7 @@ let currentSpeech = false;
 
 let currentVolume = 35;
 
-let bilibiliDanmuElement: Element | undefined;
+let bilibiliDanmuElement: Element | null = null;
 
 let currentBroadcastIndex = 0;
 
@@ -57,15 +57,86 @@ function getMieboMessage(current: Element) {
   return value;
 }
 
+function getXubaoMessage(current: Element) {
+  let value = null;
+  const itemsDiv = document.getElementById('items');
+
+  if (current) {
+    // 礼物
+    const avatarNode = current.querySelector('.avatar .img') as HTMLElement;
+    const userNode = current.querySelector('.id .text') as HTMLElement;
+    const msgNode = current.querySelector('.msg .text') as HTMLElement;
+    const giftNode = current.querySelector('.gift .text') as HTMLElement;
+
+    giftNode && (giftNode.style.color = 'bisque');
+
+    if (giftNode === null) {
+      value = `${userNode?.innerText}说${msgNode?.innerText}`;
+    } else {
+      value = `${giftNode.innerText}`;
+    }
+
+    const item = document.createElement('div');
+    item.className = 'ice--item';
+
+    const itemAvatar = document.createElement('div');
+    itemAvatar.className = 'ice--itemAvatar';
+
+    avatarNode && itemAvatar.append(avatarNode);
+    userNode && itemAvatar.append(userNode);
+
+    if (msgNode) {
+      msgNode.style.color = '#fff';
+    }
+
+    item.append(itemAvatar);
+    msgNode && item.append(msgNode);
+    giftNode && item.append(giftNode);
+
+    itemsDiv?.append(item);
+    item.scrollIntoView();
+  }
+  return value;
+}
+
+function getBlcMessage(current: Element) {
+  let value = null;
+
+  if (current) {
+    // 礼物
+    const userNode = current.querySelector('#author-name') as HTMLElement;
+    const giftNode = current.querySelector('#purchase-amount') as HTMLElement;
+    const msgNode = current.querySelector('#image-and-message') as HTMLElement;
+
+    if (userNode !== null && msgNode !== null) {
+      value = `${userNode?.innerText}说${msgNode?.innerText}`;
+    } else if (userNode !== null && giftNode !== null) {
+      value = `${userNode?.innerText}${giftNode?.innerText}`;
+    }
+  }
+
+  return value;
+}
+
 function getMessage(current: Element, cloudSource: CloudSource) {
   let value = null;
 
-  if (cloudSource === CloudSource.miebo) {
-    value = getMieboMessage(current);
-  } else if (cloudSource === CloudSource.xiaoxiao) {
-    value = getXiaoxiaoMessage(current);
-  } else {
-    value = getBilibiliMessage(current);
+  switch (cloudSource) {
+    case CloudSource.miebo:
+      value = getMieboMessage(current);
+      break;
+    case CloudSource.xiaoxiao:
+      value = getXiaoxiaoMessage(current);
+      break;
+    case CloudSource.xubao:
+      value = getXubaoMessage(current);
+      break;
+    case CloudSource.blc:
+      value = getBlcMessage(current);
+      break;
+    default:
+      value = null;
+      break;
   }
 
   return value;
@@ -79,7 +150,7 @@ function startDanmuCirculate(cloudSource: CloudSource) {
     clearTimeout(collectDanmuTimer);
     if (currentSpeech === true) {
       if (
-        bilibiliDanmuElement !== undefined &&
+        bilibiliDanmuElement !== null &&
         bilibiliDanmuElement.children.length > currentBroadcastIndex
       ) {
         const maxMessage = bilibiliDanmuElement.children.length;
@@ -93,7 +164,7 @@ function startDanmuCirculate(cloudSource: CloudSource) {
         // 如果有弹幕，收集，计数加1
         if (current) {
           const msg = getMessage(current, cloudSource);
-
+          console.log(`msg:${msg}`);
           if (msg !== null) {
             const utterThis = new SpeechSynthesisUtterance(msg);
             // console.log(`currentVolume: ${currentVolume}`);
@@ -124,25 +195,30 @@ function startDanmuCirculate(cloudSource: CloudSource) {
  * @param speech 是否开启语音播报，true表示开启
  */
 export function updateSpeech(speech: boolean, cloudSource: CloudSource) {
-  if (bilibiliDanmuElement === undefined) {
-    let current = undefined;
+  if (bilibiliDanmuElement === null) {
+    let current = null;
     switch (cloudSource) {
       case CloudSource.bilibili:
-        current = document.getElementsByClassName('danmaku');
+        current = document.getElementsByClassName('danmaku')[0];
         break;
       case CloudSource.miebo:
-        current = document.getElementsByClassName('dock-ul');
+        current = document.getElementsByClassName('dock-ul')[0];
         break;
       case CloudSource.xiaoxiao:
-        current = document.getElementsByClassName('chatarea');
+        current = document.getElementsByClassName('chatarea')[0];
+        break;
+      case CloudSource.xubao:
+        current = document.getElementById('div_BiLiveChatOutputer');
+        break;
+      case CloudSource.blc:
+        current = document.getElementById('chat-items');
         break;
       default:
-        current = undefined;
+        current = null;
         break;
     }
-    if (current) {
-      [bilibiliDanmuElement] = current;
-    }
+    bilibiliDanmuElement = current;
+    console.log('bilibiliDanmuElement: ' + bilibiliDanmuElement);
   }
 
   currentSpeech = speech;
@@ -150,7 +226,7 @@ export function updateSpeech(speech: boolean, cloudSource: CloudSource) {
     startDanmuCirculate(cloudSource);
   } else {
     // 关闭播报时的清理
-    bilibiliDanmuElement = undefined;
+    bilibiliDanmuElement = null;
     currentBroadcastIndex = 0;
   }
 }
