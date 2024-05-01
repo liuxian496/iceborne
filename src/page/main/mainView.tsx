@@ -8,7 +8,7 @@ import { Slider } from 'litten/dist/slider';
 import { StackPanel } from 'litten/dist/stackPanel';
 import { Switch } from 'litten/dist/switch';
 import { TextField } from 'litten/dist/textField';
-import { Mode, Placement } from 'litten/dist/global';
+import { Mode, Placement } from 'litten/dist/enum';
 
 import { Form } from 'litten/dist/form';
 import { FormControl } from 'litten/dist/formControl';
