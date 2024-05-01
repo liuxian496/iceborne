@@ -1,3 +1,7 @@
+## [1.4.2](https://github.com/liuxian496/iceborne/compare/v1.4.1...v1.4.2) (2024-05-01)
+
+
+
 ## [1.4.1](https://github.com/liuxian496/iceborne/compare/v1.4.0...v1.4.1) (2024-04-27)
 
 
