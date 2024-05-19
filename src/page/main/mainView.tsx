@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import './mainView.scss';
 
+import {
+  LittenCheckedChangeEvent,
+  LittenNumberChangeEvent,
+} from 'litten-hooks/dist/control/event/littenEvent.types';
+import { Placement } from 'litten-hooks/dist/enum';
+import { Form, FormControl, useForm } from 'litten-form';
+
+import { Mode } from 'litten/dist/enum';
 import { Button } from 'litten/dist/button';
+import { FormLabel } from 'litten/dist/formLabel';
 import { Radio } from 'litten/dist/radio';
 import { RadioGroup } from 'litten/dist/radioGroup';
 import { Slider } from 'litten/dist/slider';
 import { StackPanel } from 'litten/dist/stackPanel';
 import { Switch } from 'litten/dist/switch';
 import { TextField } from 'litten/dist/textField';
-import { Mode, Placement } from 'litten/dist/enum';
-
-import { Form } from 'litten/dist/form';
-import { FormControl } from 'litten/dist/formControl';
-import { FormLabel } from 'litten/dist/formLabel';
-import { useForm } from 'litten/dist/useForm';
-
-import {
-  LittenCheckedChangeEvent,
-  LittenNumberChangeEvent,
-} from 'litten/dist/components/control/littenEvent.types';
 
 import { BarrageSetting } from 'page/page.types';
 import { Local, CloudSource } from 'global/enum';
@@ -35,7 +33,7 @@ import {
 } from 'components/icon';
 
 export default function MainView() {
-  const mainForm = useForm<BarrageSetting>();
+  const mainForm = useForm();
 
   const [loading, setLoading] = useState(true);
 
@@ -75,7 +73,9 @@ export default function MainView() {
   };
 
   const handleConnectBtuClick = () => {
-    window.electron?.sentShowDanmuView(mainForm.getValues());
+    window.electron?.sentShowDanmuView(
+      mainForm.getValues() as unknown as BarrageSetting
+    );
     setConnect(true);
   };
 
@@ -100,7 +100,7 @@ export default function MainView() {
     if (checked != null) {
       setSpeech(checked);
       window.electron?.sentChangeSpeaking({
-        ...mainForm.getValues(),
+        ...(mainForm.getValues() as unknown as BarrageSetting),
         speech: checked,
       });
     }
@@ -110,7 +110,7 @@ export default function MainView() {
     const { value } = e;
     if (value !== undefined) {
       window.electron?.sentChangeSpeaking({
-        ...mainForm.getValues(),
+        ...(mainForm.getValues() as unknown as BarrageSetting),
         volume: value,
       });
     }
