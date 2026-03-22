@@ -1,13 +1,18 @@
 import { CloudSource } from 'global/enum';
 
+// 弹幕轮询定时器
 let collectDanmuTimer: any;
 
+// 是否开启语音播报
 let currentSpeech = false;
 
+// 当前播报音量（0-100）
 let currentVolume = 35;
 
+// 当前平台弹幕容器元素
 let bilibiliDanmuElement: Element | null = null;
 
+// 当前播报到的弹幕索引
 let currentBroadcastIndex = 0;
 
 function getBilibiliMessage(current: Element) {
@@ -118,6 +123,7 @@ function getBlcMessage(current: Element) {
   return value;
 }
 
+// 根据平台解析弹幕文本
 function getMessage(current: Element, cloudSource: CloudSource) {
   let value = null;
 
@@ -142,52 +148,78 @@ function getMessage(current: Element, cloudSource: CloudSource) {
   return value;
 }
 
-/**
- * 开启弹幕监听循环
- */
-function startDanmuCirculate(cloudSource: CloudSource) {
-  collectDanmuTimer = setTimeout(() => {
+// 轮询间隔（毫秒）
+const danmuPollIntervalMs = 100;
+
+// 安排下一次轮询
+function scheduleNextDanmuTick(cloudSource: CloudSource) {
+  if (collectDanmuTimer) {
     clearTimeout(collectDanmuTimer);
-    if (currentSpeech === true) {
-      if (
-        bilibiliDanmuElement !== null &&
-        bilibiliDanmuElement.children.length > currentBroadcastIndex
-      ) {
-        const maxMessage = bilibiliDanmuElement.children.length;
+  }
+  collectDanmuTimer = setTimeout(() => {
+    runDanmuTick(cloudSource);
+  }, danmuPollIntervalMs);
+}
 
-        const current =
-          cloudSource === CloudSource.xiaoxiao
-            ? bilibiliDanmuElement.children[
-                maxMessage - currentBroadcastIndex - 1
-              ]
-            : bilibiliDanmuElement.children[currentBroadcastIndex];
-        // 如果有弹幕，收集，计数加1
-        if (current) {
-          const msg = getMessage(current, cloudSource);
-          console.log(`msg:${msg}`);
-          if (msg !== null) {
-            const utterThis = new SpeechSynthesisUtterance(msg);
-            // console.log(`currentVolume: ${currentVolume}`);
-            utterThis.volume = currentVolume / 100;
-            speechSynthesis.speak(utterThis);
+// 按平台规则取当前要播报的弹幕元素
+function getCurrentDanmuElement(cloudSource: CloudSource, maxMessage: number) {
+  return cloudSource === CloudSource.xiaoxiao
+    ? bilibiliDanmuElement!.children[maxMessage - currentBroadcastIndex - 1]
+    : bilibiliDanmuElement!.children[currentBroadcastIndex];
+}
 
-            utterThis.onend = () => {
-              startDanmuCirculate(cloudSource);
-              currentBroadcastIndex += 1;
-            };
-          } else {
-            // msg返回null时，表示遇到无法解析的弹幕。计数加一，跳过
-            currentBroadcastIndex += 1;
-            startDanmuCirculate(cloudSource);
-          }
-        } else {
-          startDanmuCirculate(cloudSource);
-        }
-      } else {
-        startDanmuCirculate(cloudSource);
-      }
-    }
-  }, 100);
+// 执行一次弹幕轮询与播报
+function runDanmuTick(cloudSource: CloudSource) {
+  if (currentSpeech !== true) {
+    return;
+  }
+
+  if (bilibiliDanmuElement === null) {
+    scheduleNextDanmuTick(cloudSource);
+    return;
+  }
+
+  const maxMessage = bilibiliDanmuElement.children.length;
+  if (maxMessage === 0) {
+    scheduleNextDanmuTick(cloudSource);
+    return;
+  }
+
+  if (currentBroadcastIndex > maxMessage) {
+    currentBroadcastIndex = 0;
+  }
+
+  const current = getCurrentDanmuElement(cloudSource, maxMessage);
+  if (!current) {
+    scheduleNextDanmuTick(cloudSource);
+    return;
+  }
+
+  const msg = getMessage(current, cloudSource);
+  console.log(`msg:${msg}`);
+  if (msg === null) {
+    // msg返回null时，表示遇到无法解析的弹幕。计数加一，跳过
+    currentBroadcastIndex += 1;
+    scheduleNextDanmuTick(cloudSource);
+    return;
+  }
+
+  const utterThis = new SpeechSynthesisUtterance(msg);
+  utterThis.volume = currentVolume / 100;
+  utterThis.onend = () => {
+    currentBroadcastIndex += 1;
+    scheduleNextDanmuTick(cloudSource);
+  };
+  utterThis.onerror = () => {
+    currentBroadcastIndex += 1;
+    scheduleNextDanmuTick(cloudSource);
+  };
+  speechSynthesis.speak(utterThis);
+}
+
+// 启动弹幕播报循环
+function startDanmuCirculate(cloudSource: CloudSource) {
+  scheduleNextDanmuTick(cloudSource);
 }
 
 /**
@@ -219,6 +251,16 @@ export function updateSpeech(speech: boolean, cloudSource: CloudSource) {
     }
     bilibiliDanmuElement = current;
     console.log('bilibiliDanmuElement: ' + bilibiliDanmuElement);
+  } else {
+    // 关闭播报时的清理
+    currentSpeech = false;
+    speechSynthesis.cancel(); // 关键修复：立即停止所有语音播报
+    bilibiliDanmuElement = null;
+    currentBroadcastIndex = 0;
+    if (collectDanmuTimer) {
+      clearTimeout(collectDanmuTimer);
+      collectDanmuTimer = null;
+    }
   }
 
   currentSpeech = speech;
