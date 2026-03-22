@@ -1,3 +1,12 @@
+## [1.4.3](https://github.com/liuxian496/iceborne/compare/v1.4.2...v1.4.3) (2026-03-22)
+
+
+### Bug Fixes
+
+* 修复弹幕集中连续发送时，轮询失败，不能播报的问题 ([2a1a0e5](https://github.com/liuxian496/iceborne/commit/2a1a0e5c7355cd7b34a7edc7a714a16a7a6ddc12))
+
+
+
 ## [1.4.2](https://github.com/liuxian496/iceborne/compare/v1.4.1...v1.4.2) (2024-05-01)
 
 

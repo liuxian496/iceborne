@@ -229,10 +229,6 @@
   "collective": {
     "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
-  "devEngines": {
-    "node": ">=14.x",
-    "npm": ">=7.x"
-  },
   "electronmon": {
     "patterns": [
       "!**/**",
@@ -256,5 +252,5 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
-  "version": "1.4.2"
+  "version": "1.4.3"
 }
