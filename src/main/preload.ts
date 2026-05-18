@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
+import { updateSpeech, updateVolume } from 'components/speaker';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { BarrageSetting } from 'page/page.types';
-import { updateSpeech, updateVolume } from './speaking';
 
 export type Channels = 'ipc-example';
 
