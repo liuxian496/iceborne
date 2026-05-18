@@ -1,3 +1,12 @@
+## [1.4.4](https://github.com/liuxian496/iceborne/compare/v1.4.3...v1.4.4) (2026-05-18)
+
+
+### Features
+
+* 将音量默认值设置成50 ([fbc1e05](https://github.com/liuxian496/iceborne/commit/fbc1e05229e7bfa2414cea53d8b3cdd7e026304f))
+
+
+
 ## [1.4.3](https://github.com/liuxian496/iceborne/compare/v1.4.2...v1.4.3) (2026-03-22)
 
 
