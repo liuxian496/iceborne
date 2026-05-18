@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import './mainView.scss';
 
+import { Form, FormControl, useForm } from 'litten-form';
 import {
   LittenCheckedChangeEvent,
   LittenNumberChangeEvent,
 } from 'litten-hooks/dist/control/event/littenEvent.types';
 import { Placement } from 'litten-hooks/dist/enum';
-import { Form, FormControl, useForm } from 'litten-form';
 
-import { Mode } from 'litten/dist/enum';
 import { Button } from 'litten/dist/button';
+import { Mode } from 'litten/dist/enum';
 import { FormLabel } from 'litten/dist/formLabel';
 import { Radio } from 'litten/dist/radio';
 import { RadioGroup } from 'litten/dist/radioGroup';
@@ -18,9 +18,6 @@ import { StackPanel } from 'litten/dist/stackPanel';
 import { Switch } from 'litten/dist/switch';
 import { TextField } from 'litten/dist/textField';
 
-import { BarrageSetting } from 'page/page.types';
-import { Local, CloudSource } from 'global/enum';
-import { getLexicon } from 'global/i18n';
 import {
   AsiaIcon,
   CloudIcon,
@@ -31,6 +28,9 @@ import {
   RoomIcon,
   VolumeIcon,
 } from 'components/icon';
+import { CloudSource, Local } from 'global/enum';
+import { getLexicon } from 'global/i18n';
+import { BarrageSetting } from 'page/page.types';
 
 export default function MainView() {
   const mainForm = useForm();
@@ -305,7 +305,7 @@ export default function MainView() {
             <FormLabel label={i18N.volume}>
               <StackPanel style={{ width: 200, marginLeft: 10 }}>
                 <FormControl valuePath="volume">
-                  <Slider defaultValue={20} onChange={handleVolumeChange} />
+                  <Slider defaultValue={50} onChange={handleVolumeChange} />
                 </FormControl>
               </StackPanel>
             </FormLabel>
