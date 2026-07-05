@@ -19,6 +19,12 @@ let currentCloudSource: CloudSource | null = null;
 // 轮询间隔（毫秒）
 const pollInterval = 100;
 
+// 记录最后一条成功播报的弹幕内容，用于容器清空后恢复场景判断
+let lastBroadcastedMsg: string | null = null;
+
+// 标记容器是否曾被清空，用于在清空后的首次有弹幕时进行消息去重
+let wasEmpty = false;
+
 /**
  * 按平台规则取当前要播报的弹幕元素
  * @param cloudSource 弹幕来源平台
@@ -50,13 +56,82 @@ function runDanmakuTick() {
 
   const maxMessage = danmakuElement.children.length;
   if (maxMessage === 0) {
+    wasEmpty = true;
+    currentBroadcastIndex = 0;
     scheduleNextDanmakuTick();
     return;
   }
 
-  if (currentBroadcastIndex > maxMessage) {
-    // 如果当前索引超过弹幕数量，证明弹幕被清空，重置索引
-    currentBroadcastIndex = 0;
+  // 处理容器从空变为非空的情况
+  if (wasEmpty) {
+    wasEmpty = false;
+
+    // 获取第一个应该播报的元素（不同平台首元素逻辑不同）
+    const firstElement =
+      currentCloudSource === CloudSource.xiaoxiao
+        ? danmakuElement.children[maxMessage - 1]
+        : danmakuElement.children[0];
+
+    const firstMsg = firstElement
+      ? getMessage(firstElement, currentCloudSource!)
+      : null;
+
+    if (firstMsg !== null && firstMsg === lastBroadcastedMsg) {
+      // DOM 重建（例如React重新渲染），需要跳过已播报过的相同消息
+      let skipIndex = 0;
+
+      if (currentCloudSource === CloudSource.xiaoxiao) {
+        // xiaoxiao 容器中 children 顺序与播报顺序相反（index 0 为最新）
+        // 遍历所有弹幕，从旧到新（children 索引从大到小），找到第一个不同的
+        for (let i = maxMessage - 1; i >= 0; i--) {
+          const childMsg = getMessage(
+            danmakuElement.children[i],
+            currentCloudSource!
+          );
+          if (childMsg !== lastBroadcastedMsg) {
+            // 映射到播报索引: broadcastIndex = maxMessage - 1 - i
+            skipIndex = maxMessage - 1 - i;
+            break;
+          }
+          if (i === 0) {
+            // 全部与 lastBroadcastedMsg 相同，跳过所有
+            skipIndex = maxMessage;
+          }
+        }
+      } else {
+        // 其他平台：children 顺序与播报顺序一致
+        for (let i = 0; i < maxMessage; i++) {
+          const childMsg = getMessage(
+            danmakuElement.children[i],
+            currentCloudSource!
+          );
+          if (childMsg !== lastBroadcastedMsg) {
+            skipIndex = i;
+            break;
+          }
+          if (i === maxMessage - 1) {
+            skipIndex = maxMessage;
+          }
+        }
+      }
+
+      currentBroadcastIndex = skipIndex;
+    } else {
+      // 容器内容已完全刷新，从头开始播报
+      currentBroadcastIndex = 0;
+    }
+
+    // 如果跳过所有消息，等待下一轮
+    if (currentBroadcastIndex >= maxMessage) {
+      scheduleNextDanmakuTick();
+      return;
+    }
+  }
+
+  if (currentBroadcastIndex >= maxMessage) {
+    // 当前没有待播报的新弹幕，等待下一轮
+    scheduleNextDanmakuTick();
+    return;
   }
 
   const current = getCurrentDanmakuElement(currentCloudSource!, maxMessage);
@@ -79,6 +154,7 @@ function runDanmakuTick() {
   const utterThis = new SpeechSynthesisUtterance(msg);
   utterThis.volume = speakerSetting.volume / 100;
   utterThis.onend = () => {
+    lastBroadcastedMsg = msg; // 记录成功播报的消息
     currentBroadcastIndex += 1;
     scheduleNextDanmakuTick();
   };
@@ -110,6 +186,8 @@ function stopSpeech() {
   speechSynthesis.cancel();
   danmakuElement = null;
   currentBroadcastIndex = 0;
+  lastBroadcastedMsg = null;
+  wasEmpty = false;
   if (timer) {
     clearTimeout(timer);
     timer = null;

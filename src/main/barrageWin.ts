@@ -1,6 +1,6 @@
 import { BrowserWindow, app } from 'electron';
-import path from 'path';
 import { BarrageSetting } from 'page/page.types';
+import path from 'path';
 import { CloudSource } from '../global/enum';
 
 let barrageWin: BrowserWindow | null = null;
@@ -77,11 +77,12 @@ function setBlcContents(pluginUrl: string) {
     '#author-name { background-color: transparent !important; center;font-size: 18px;color:#fff !important }'
   );
 
-  barrageWin?.webContents.insertCSS('#message { color:#fff !important;font-size: 18px; }');
+  barrageWin?.webContents.insertCSS(
+    '#message { color:#fff !important;font-size: 18px; }'
+  );
 
   barrageWin?.loadURL(pluginUrl);
 }
-
 
 /**
  * 加载miebo云直播插件
@@ -96,6 +97,10 @@ function setMieboContents(pluginUrl: string) {
   barrageWin?.loadURL(pluginUrl);
 }
 
+/**
+ * 创建
+ * @param props
+ */
 function createDanMuView(props: BarrageSetting) {
   const { cloudSource, pluginUrl, speech, volume } = props;
 
