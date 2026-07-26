@@ -80,6 +80,37 @@ const electronHandler = {
   onbilibiliManageWinClosed: (callback: any) => {
     ipcRenderer.on('bilibili-manage-win-closed', callback);
   },
+
+  /* ====== 新增：历史弹幕相关 API ====== */
+
+  /**
+   * 保存一条历史弹幕记录
+   * @param record 弹幕记录
+   */
+  sentSaveBarrageHistory: (record: {
+    username: string;
+    content: string;
+    platform: string;
+    type?: string;
+    color?: string;
+  }) => {
+    ipcRenderer.send('save-barrage-history', record);
+  },
+
+  /**
+   * 获取指定日期的历史弹幕（异步）
+   * @param dateStr 日期字符串 年-月-日，例如 "2026-07-05"
+   */
+  getBarrageHistory: (dateStr: string): Promise<any[]> => {
+    return ipcRenderer.invoke('get-barrage-history', dateStr);
+  },
+
+  /**
+   * 获取所有有历史记录的日期列表（异步）
+   */
+  getBarrageHistoryDates: (): Promise<string[]> => {
+    return ipcRenderer.invoke('get-barrage-history-dates');
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

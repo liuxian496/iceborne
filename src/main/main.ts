@@ -9,23 +9,26 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
+import { autoUpdater } from 'electron-updater';
 import { BarrageSetting } from 'page/page.types';
+import path from 'path';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 import {
+  changeBarrageSpeaking,
   hidenDanMuView,
   showDanMuView,
-  changeBarrageSpeaking,
 } from './barrageWin';
 import {
   hideBilibiliManageView,
   showBilibiliManageView,
 } from './bilibiliManageWin';
+
+/* ====== 历史弹幕服务 ====== */
+import { BarrageRecord, historyService } from './historyService';
 
 class AppUpdater {
   constructor() {
@@ -78,6 +81,29 @@ ipcMain.on('hide-bilibili-manage-view', async () => {
  */
 ipcMain.on('change-speaking', async (event, args: BarrageSetting) => {
   await changeBarrageSpeaking(args);
+});
+
+/* ====== IPC：保存历史弹幕 ====== */
+/**
+ * 接收渲染进程发来的弹幕记录并保存到文件
+ * 在 updateSpeech.ts 的 runDanmuTick 中调用 window.electron.sentSaveBarrageHistory
+ */
+ipcMain.on(
+  'save-barrage-history',
+  async (event, record: Omit<BarrageRecord, 'timestamp'>) => {
+    console.log('ipc: save-barrage-history');
+    historyService.saveRecord(record);
+  }
+);
+
+/* ====== IPC：获取历史弹幕 ====== */
+ipcMain.handle('get-barrage-history', async (_event, dateStr: string) => {
+  return historyService.getRecords(dateStr);
+});
+
+/* ====== IPC：获取有历史记录的日期列表 ====== */
+ipcMain.handle('get-barrage-history-dates', async () => {
+  return historyService.getAvailableDates();
 });
 
 if (process.env.NODE_ENV === 'production') {

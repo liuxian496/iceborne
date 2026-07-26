@@ -1,4 +1,8 @@
-import { getMessage } from 'components/cloudSourceMessage';
+import {
+  getMessage,
+  getUsernameFromElement,
+} from 'components/cloudSourceMessage';
+import { ipcRenderer } from 'electron';
 import { CloudSource } from 'global/enum';
 import { speakerSetting } from './speaker';
 
@@ -143,6 +147,22 @@ function runDanmakuTick() {
 
   const msg = getMessage(current, currentCloudSource!);
   console.log(`msg:${msg}`);
+
+  // 保存历史弹幕,暂时禁用保存历史
+  // try {
+  //   const username =
+  //     getUsernameFromElement(current, currentCloudSource!) || '匿名用户';
+  //   const content = msg || '';
+  //   ipcRenderer.send('save-barrage-history', {
+  //     username,
+  //     content,
+  //     platform: currentCloudSource || 'unknown',
+  //     type: 'danmu',
+  //   });
+  // } catch (saveErr) {
+  //   // 保存失败不影响主流程
+  //   console.warn('[HistoryService] 保存弹幕记录失败:', saveErr);
+  // }
 
   if (msg === null) {
     // msg返回null时，表示遇到无法解析的弹幕。计数加一，跳过
