@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './mainView.scss';
 
-import { Form, FormControl, useForm } from 'litten-form';
+import { Form, useForm } from 'litten-form';
 import {
   LittenCheckedChangeEvent,
   LittenNumberChangeEvent,
@@ -33,7 +33,7 @@ import { getLexicon } from 'global/i18n';
 import { BarrageSetting } from 'page/page.types';
 
 export default function MainView() {
-  const mainForm = useForm();
+  const [mainFormRef, mainForm] = useForm();
 
   const [loading, setLoading] = useState(true);
 
@@ -74,7 +74,7 @@ export default function MainView() {
 
   const handleConnectBtuClick = () => {
     window.electron?.sentShowDanmuView(
-      mainForm.getValues() as unknown as BarrageSetting
+      mainForm?.getValues() as unknown as BarrageSetting
     );
     setConnect(true);
   };
@@ -100,7 +100,7 @@ export default function MainView() {
     if (checked != null) {
       setSpeech(checked);
       window.electron?.sentChangeSpeaking({
-        ...(mainForm.getValues() as unknown as BarrageSetting),
+        ...(mainForm?.getValues() as unknown as BarrageSetting),
         speech: checked,
       });
     }
@@ -110,7 +110,7 @@ export default function MainView() {
     const { value } = e;
     if (value !== undefined) {
       window.electron?.sentChangeSpeaking({
-        ...(mainForm.getValues() as unknown as BarrageSetting),
+        ...(mainForm?.getValues() as unknown as BarrageSetting),
         volume: value,
       });
     }
@@ -205,7 +205,7 @@ export default function MainView() {
 
   return (
     <>
-      <Form formRef={mainForm}>
+      <Form ref={mainFormRef}>
         <StackPanel direction="column" alignItems="flex-start">
           {/* 云插件来源 */}
           <StackPanel alignItems="center">
